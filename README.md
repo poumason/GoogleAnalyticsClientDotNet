@@ -7,30 +7,35 @@ Supported Platform : UWP, .NET(4.5.1)
 
 ### Current Features:
 
-* Make basic calls to http://api.mixpanel.com/track and track events
+* Make basic calls to https://developers.google.com/analytics/devguides/collection/protocol/v1/ and track events
 
 ### Usage:
 
 Step 1. install nuget:
-* UWP: https://www.nuget.org/packages/MixpanelDotNet.UWP/
-* WPF: https://www.nuget.org/packages/MixpanelClientDotNet.WPF
+* UWP: https://www.nuget.org/packages/GoogleAnalyticsClientDotNet.Universal/
+* WPF: https://www.nuget.org/packages/GoogleAnalyticsClientDotNet.Net45/
 
 Step 2. new the MixpanelClient instance.
 
 ```csharp
-IMixpanelClient tracker = new MixpanelClient("your API token");
+AnalyticsService tracker = new AnalyticsService();
+service.Initialize("{tracking id}");
 ```
 
-Step 3. new the EventData, and set properties.
+Step 3. new the EventParameter, and set properties.
 
 ```csharp
-var eventData = new EventData("event name");
-eventData.SetProperty("key1", 1);
-eventData.SetProperty("key2", "name");
-eventData.SetProperty("ket3", true);
-tracker.TrackEvent(eventData);
+EventParameter eventData = new EventParameter();
+eventData.Category = "";
+eventData.Action = "";
+eventData.Label = " Playlist";
+eventData.ScreenName = "";
+eventData.ClientId = "";
+eventData.UserAgent = deviceService.ModelName;
+            
+service.TrackEvent(eventData);
 ```
 
 ### Licence
 
-[Licenced under the Apache 2.0 licence](https://github.com/poumason/Mixpanel.Net.Client/blob/master/license.txt)
+[Licenced under the Apache 2.0 licence](https://github.com/poumason/GoogleAnalyticsClientDotNet/blob/master/license.txt)

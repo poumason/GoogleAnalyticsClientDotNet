@@ -48,9 +48,9 @@
     <Compile Include="Utility\NetworkHelper.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\GoogleAnalyticsClientDotNet.Portable\GoogleAnalyticsClientDotNet.Portable.csproj">
+    <ProjectReference Include="..\GoogleAnalyticsClientDotNet.Portable\GoogleAnalyticsClientDotNet.csproj">
       <Project>{ad5e2505-1d4f-4cbf-9d57-6bfacf29397e}</Project>
-      <Name>GoogleAnalyticsClientDotNet.Portable</Name>
+      <Name>GoogleAnalyticsClientDotNet</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
