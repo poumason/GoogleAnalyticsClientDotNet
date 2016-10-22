@@ -28,7 +28,7 @@ Step 3. new the EventParameter, and set properties.
 EventParameter eventData = new EventParameter();
 eventData.Category = "";
 eventData.Action = "";
-eventData.Label = " Playlist";
+eventData.Label = "";
 eventData.ScreenName = "";
 eventData.ClientId = "";
 eventData.UserAgent = deviceService.ModelName;
