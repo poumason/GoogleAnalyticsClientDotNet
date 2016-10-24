@@ -61,7 +61,7 @@ namespace GoogleAnalysisClientDotNet.App.UWP
 
         private void StartTimer()
         {
-            if (timer== null)
+            if (timer == null)
             {
                 timer = new DispatcherTimer();
                 timer.Interval = TimeSpan.FromSeconds(10);
@@ -78,9 +78,10 @@ namespace GoogleAnalysisClientDotNet.App.UWP
             eventData.Action = "";
             eventData.Label = "";
             eventData.ScreenName = "";
-            eventData.ClientId = "";
-            eventData.UserAgent = deviceService.ModelName;
-            
+            eventData.ClientId = eventData.UserId = "";
+            eventData.UserAgent = $"{deviceService.OperatingSystem} {deviceService.OperationSystemVersion} {deviceService.DeviceFamily}";
+            eventData.OperatingSystem = deviceService.OperatingSystem;
+
             service.TrackEvent(eventData);
             StartTimer();
         }

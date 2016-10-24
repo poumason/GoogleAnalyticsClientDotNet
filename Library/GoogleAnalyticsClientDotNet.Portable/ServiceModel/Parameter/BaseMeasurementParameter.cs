@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -23,11 +24,19 @@ namespace GoogleAnalyticsClientDotNet.ServiceModel
         [HttpProperty("ds", HttpPropertyFor.POST)]
         public string DataSource { get; set; } = "app";
 
+        /// <summary>
+        /// <para>This anonymously identifies a particular user, device, or browser instance.</para>
+        /// <para>Required for all hit types.</para>
+        /// </summary>
         [HttpProperty("cid", HttpPropertyFor.POST)]
         public string ClientId { get; set; }
 
-        //[HttpProperty("uid", HttpPropertyFor.POST)]
-        //public string UserId { get; set; }
+        /// <summary>
+        /// <para>This is intended to be a known identifier for a user provided by the site owner/tracking library user. </para>
+        /// <para>Optional.</para>
+        /// </summary>
+        [HttpProperty("uid", HttpPropertyFor.POST)]
+        public string UserId { get; set; }
 
         [HttpProperty("ua", HttpPropertyFor.POST)]
         public string UserAgent { get; set; }
@@ -43,5 +52,17 @@ namespace GoogleAnalyticsClientDotNet.ServiceModel
 
         [HttpProperty("av", HttpPropertyFor.POST)]
         public string ApplicationVersion { get; set; }
+
+        [HttpProperty("ul", HttpPropertyFor.POST)]
+        public string UserLanguage
+        {
+            get
+            {
+                return CultureInfo.CurrentUICulture.Name;
+            }
+        }
+
+        [HttpProperty("os", HttpPropertyFor.POST)]
+        public string OperatingSystem { get; set; }
     }
 }
