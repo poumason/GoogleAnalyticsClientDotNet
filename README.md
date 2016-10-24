@@ -15,7 +15,7 @@ Step 1. install nuget:
 * UWP: https://www.nuget.org/packages/GoogleAnalyticsClientDotNet.Universal/
 * WPF: https://www.nuget.org/packages/GoogleAnalyticsClientDotNet.Net45/
 
-Step 2. new the MixpanelClient instance.
+Step 2. new the AnalyticsService instance.
 
 ```csharp
 AnalyticsService tracker = new AnalyticsService();
