@@ -34,13 +34,18 @@ namespace GoogleAnalyticsClientDotNet.App.WPF
             InitializeComponent();
 
             Loaded += MainWindow_Loaded;
-
             Unloaded += MainWindow_Unloaded;
+            Closed += MainWindow_Closed;
 
             service = new AnalyticsService();
             service.Initialize("{tracking id}");
 
             deviceService = new DeviceInformationService();
+        }
+
+        private async void MainWindow_Closed(object sender, EventArgs e)
+        {
+            await service?.SaveTempEventsData();
         }
 
         private void MainWindow_Unloaded(object sender, RoutedEventArgs e)

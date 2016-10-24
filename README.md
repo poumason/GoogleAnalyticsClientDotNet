@@ -36,6 +36,14 @@ eventData.UserAgent = deviceService.ModelName;
 service.TrackEvent(eventData);
 ```
 
+Step 4. For WPF, need call method: SaveTempEventsData() to keep not upload events.
+```csharp
+private async void MainWindow_Closed(object sender, EventArgs e)
+{
+    await service?.SaveTempEventsData();
+}
+```
+
 ### Licence
 
 [Licenced under the Apache 2.0 licence](https://github.com/poumason/GoogleAnalyticsClientDotNet/blob/master/license.txt)
