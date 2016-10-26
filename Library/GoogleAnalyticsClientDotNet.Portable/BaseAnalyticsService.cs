@@ -3,6 +3,7 @@ using GoogleAnalyticsClientDotNet.Utility;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -161,10 +162,12 @@ namespace GoogleAnalyticsClientDotNet
             if (NetworkTool.IsNetworkAvailable)
             {
                 var task = httpService.PostAsync(CommonDefine.GOOGLE_ANALYTICS_COLLECT_URl, postContent);
+                Debug.WriteLine("GoogleAnalytics: Send");
             }
             else
             {
                 TempEventCollection.Enqueue(postContent);
+                Debug.WriteLine("GoogleAnalytics: Enqueue");
             }
         }
 
