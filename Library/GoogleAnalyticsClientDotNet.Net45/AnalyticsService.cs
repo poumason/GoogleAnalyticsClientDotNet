@@ -21,14 +21,37 @@ namespace GoogleAnalyticsClientDotNet
 
         protected override Task<string> ReadFile()
         {
-            string content = File.ReadAllText(CommonDefine.GA_TRACK_FILE_NAME, Encoding.UTF8);
+            string content = string.Empty;
+
+            try
+            {
+                content = File.ReadAllText(CommonDefine.GA_TRACK_FILE_NAME, Encoding.UTF8);
+            }
+            catch (IOException)
+            {
+#if DEBUG
+                throw;
+#endif
+                content = string.Empty;
+            }
+
             return Task.FromResult(content);
         }
 
-        protected override Task<bool> WriteFile(string data)
+        protected override Task WriteFile(string data)
         {
-            File.WriteAllText(CommonDefine.GA_TRACK_FILE_NAME, data, Encoding.UTF8);
-            return Task.FromResult(true);
+            try
+            {
+                File.WriteAllText(CommonDefine.GA_TRACK_FILE_NAME, data, Encoding.UTF8);
+            }
+            catch (IOException)
+            {
+#if DEBUG
+                throw;
+#endif
+            }
+
+            return Task.FromResult(true);    
         }
 
         protected override void Reset()

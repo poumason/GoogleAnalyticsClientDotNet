@@ -12,6 +12,11 @@ namespace GoogleAnalyticsClientDotNet
     {
         private StorageFile TempFile { get; set; }
 
+        /// <summary>
+        /// When App be suspended, not yet sent events will be auto save.
+        /// </summary>
+        public bool AutoSaveEvents { get; set; } = true;
+
         public override void Initialize(string trackingId)
         {
             NetworkTool = new NetworkHelper();
@@ -32,6 +37,11 @@ namespace GoogleAnalyticsClientDotNet
 
         private async void Current_Suspending(object sender, Windows.ApplicationModel.SuspendingEventArgs e)
         {
+            if (AutoSaveEvents == false)
+            {
+                return;
+            }
+
             var deferral = e.SuspendingOperation.GetDeferral();
 
             await SaveTempEventsData();
@@ -43,6 +53,7 @@ namespace GoogleAnalyticsClientDotNet
         {
             string content = string.Empty;
             var file = await GetGoogleAnalyticsTempFile();
+
             try
             {
                 if (file != null)
@@ -59,24 +70,23 @@ namespace GoogleAnalyticsClientDotNet
             {
                 Debug.WriteLine(ex);
             }
+
             return content;
         }
 
-        protected override async Task<bool> WriteFile(string data)
+        protected override async Task WriteFile(string data)
         {
-            bool result = false;
             var file = await GetGoogleAnalyticsTempFile();
 
             if (file == null)
             {
-                return result;
+                return;
             }
 
             try
             {
                 StorageFile target = file as StorageFile;
                 await FileIO.WriteTextAsync(target, data);
-                result = true;
             }
             catch (UnauthorizedAccessException ex)
             {
@@ -86,8 +96,6 @@ namespace GoogleAnalyticsClientDotNet
             {
                 Debug.WriteLine(ex);
             }
-
-            return result;
         }
 
         protected override async Task<object> GetGoogleAnalyticsTempFile()

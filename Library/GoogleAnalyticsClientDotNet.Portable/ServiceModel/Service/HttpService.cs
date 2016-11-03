@@ -24,10 +24,20 @@ namespace GoogleAnalyticsClientDotNet.ServiceModel
 
         public async Task<bool> PostAsync(string uri, string strContent)
         {
-            HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Post, new Uri(uri));
-            request.Content = new StringContent(strContent, Encoding.UTF8);           
-            var result = await HttpInstance.SendAsync(request);
-            return result.IsSuccessStatusCode;
+            try
+            {
+                HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Post, new Uri(uri));
+                request.Content = new StringContent(strContent, Encoding.UTF8);
+                var result = await HttpInstance.SendAsync(request);
+                return result.IsSuccessStatusCode;
+            }
+            catch (Exception)
+            {
+#if DEBUG
+                throw;
+#endif
+                return false;
+            }
         }
     }
 }

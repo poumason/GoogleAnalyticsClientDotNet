@@ -53,64 +53,83 @@ namespace GoogleAnalyticsClientDotNet
                 postContent = result.PostParameterMap.ToQueryString(true);
             }
 
+            if (string.IsNullOrEmpty(postContent))
+            {
+                return;
+            }
+
             SendTrack(postContent);
         }
 
         private async Task ImportEvents()
         {
-            TempEventCollection collectionItem = null;
-            var tempJson = await ReadFile();
+            try
+            {
+                TempEventCollection collectionItem = null;
+                var tempJson = await ReadFile();
 
-            if (string.IsNullOrEmpty(tempJson) == false)
-            {
-                collectionItem = JsonConvert.DeserializeObject<TempEventCollection>(tempJson);
-            }
-
-            if (collectionItem == null)
-            {
-                return;
-            }
-            else
-            {
-                foreach (var item in collectionItem.Events)
+                if (string.IsNullOrEmpty(tempJson) == false)
                 {
-                    TempEventCollection.Enqueue(item);
+                    collectionItem = JsonConvert.DeserializeObject<TempEventCollection>(tempJson);
                 }
+
+                if (collectionItem == null)
+                {
+                    return;
+                }
+                else
+                {
+                    foreach (var item in collectionItem.Events)
+                    {
+                        TempEventCollection.Enqueue(item);
+                    }
+                }
+            }
+            catch (Exception)
+            {
+#if DEBUG
+                throw;
+#endif
             }
         }
 
         public async Task SaveTempEventsData()
         {
-            if (TempEventCollection == null || TempEventCollection.Count == 0)
+            try
             {
-                return;
+                if (TempEventCollection == null || TempEventCollection.Count == 0)
+                {
+                    return;
+                }
+
+                TempEventCollection collectionItem = null;
+                var tempJson = await ReadFile();
+
+                if (string.IsNullOrEmpty(tempJson) == false)
+                {
+                    collectionItem = JsonConvert.DeserializeObject<TempEventCollection>(tempJson);
+                }
+
+                if (collectionItem == null)
+                {
+                    collectionItem = new TempEventCollection();
+                }
+
+                collectionItem.Events.AddRange(TempEventCollection);
+                TempEventCollection.Clear();
+
+                string newJson = JsonConvert.SerializeObject(collectionItem);
+                await WriteFile(newJson);
             }
-
-            StopTimer();
-
-            TempEventCollection collectionItem = null;
-            var tempJson = await ReadFile();
-
-            if (string.IsNullOrEmpty(tempJson) == false)
+            catch (Exception)
             {
-                collectionItem = JsonConvert.DeserializeObject<TempEventCollection>(tempJson);
+#if DEBUG
+                throw;
+#endif
             }
-
-            if (collectionItem == null)
-            {
-                collectionItem = new TempEventCollection();
-            }
-
-            collectionItem.Events.AddRange(TempEventCollection);
-            TempEventCollection.Clear();
-
-            string newJson = JsonConvert.SerializeObject(collectionItem);
-            await WriteFile(newJson);
-
-            StartTimer();
         }
 
-        #region Timer
+#region Timer
         protected void StartTimer()
         {
             if (looptimer == null)
@@ -142,11 +161,11 @@ namespace GoogleAnalyticsClientDotNet
             StartTimer();
         }
 
-        #endregion
+#endregion
 
         protected abstract Task<string> ReadFile();
 
-        protected abstract Task<bool> WriteFile(string data);
+        protected abstract Task WriteFile(string data);
 
         protected abstract Task<object> GetGoogleAnalyticsTempFile();
 
