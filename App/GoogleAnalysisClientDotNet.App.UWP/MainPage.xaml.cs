@@ -40,7 +40,7 @@ namespace GoogleAnalysisClientDotNet.App.UWP
 
             service = new AnalyticsService();
             service.Initialize("{tracking id}");
-
+            service.AutoSaveEvents = true;
             deviceService = new DeviceInformationService();
         }
 

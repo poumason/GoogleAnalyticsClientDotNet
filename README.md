@@ -44,6 +44,21 @@ private async void MainWindow_Closed(object sender, EventArgs e)
 }
 ```
 
+Step 5. For Universal Windows Platform. User can choice to auto save events data in the Suspened.
+```csharp
+// If set the AutoSaveEvents is false, user need to add SaveTempEventsData method in the Suspened event.
+service.AutoSaveEvents = false;
+
+private async void Current_Suspending(object sender, Windows.ApplicationModel.SuspendingEventArgs e)
+{
+    var deferral = e.SuspendingOperation.GetDeferral();
+
+    await service.SaveTempEventsData();
+
+    deferral.Complete();
+}
+```
+
 ### Licence
 
 [Licenced under the Apache 2.0 licence](https://github.com/poumason/GoogleAnalyticsClientDotNet/blob/master/license.txt)
