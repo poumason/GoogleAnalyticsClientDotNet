@@ -13,7 +13,8 @@ namespace GoogleAnalyticsClientDotNet
         private StorageFile TempFile { get; set; }
 
         /// <summary>
-        /// When App be suspended, not yet sent events will be auto save.
+        /// <para>When App be suspended, not yet sent events will be auto save.</para>
+        /// <para>default: true.</para>
         /// </summary>
         public bool AutoSaveEvents { get; set; } = true;
 
