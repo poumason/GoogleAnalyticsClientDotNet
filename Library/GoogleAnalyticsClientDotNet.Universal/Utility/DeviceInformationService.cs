@@ -1,10 +1,10 @@
 ﻿using GoogleAnalyticsClientDotNet.Universal.Utility;
 using System;
+using Windows.ApplicationModel;
 using Windows.Foundation.Metadata;
 using Windows.Security.Cryptography;
 using Windows.Security.Cryptography.Core;
 using Windows.Security.ExchangeActiveSyncProvisioning;
-using Windows.System;
 using Windows.System.Profile;
 
 namespace GoogleAnalyticsClientDotNet.Utility
@@ -76,6 +76,24 @@ namespace GoogleAnalyticsClientDotNet.Utility
             }
         }
 
+        public string OperationSystemVersionBuild
+        {
+            get
+            {
+                string version = OperationSystemVersion;
+                if (string.IsNullOrEmpty(version) || version.LastIndexOf(".") == 0)
+                {
+                    return string.Empty;
+                }
+                return version.Substring(version.LastIndexOf(".") + 1);
+            }
+        }
+
+        public string SystemArchitecture
+        {
+            get { return Package.Current.Id.Architecture.ToString(); }
+        }
+
         public string SystemManufacturer
         {
             get { return deviceInformation.SystemManufacturer; }
@@ -111,19 +129,12 @@ namespace GoogleAnalyticsClientDotNet.Utility
             get { return DeviceFamily?.IndexOf("xbox", StringComparison.OrdinalIgnoreCase) >= 0; }
         }
 
-        public ulong MemoryLimit
+        public bool IsTouchEnabled
         {
             get
             {
-                try
-                {
-                    var limit = MemoryManager.AppMemoryUsageLimit / 1024 / 1024;
-                    return limit;
-                }
-                catch (Exception)
-                {
-                    return 0;
-                }
+                var touch = new Windows.Devices.Input.TouchCapabilities();
+                return touch.TouchPresent > 0;
             }
         }
 

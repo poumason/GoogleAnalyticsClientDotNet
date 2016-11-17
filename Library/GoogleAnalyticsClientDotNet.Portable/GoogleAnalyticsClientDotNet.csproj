@@ -36,6 +36,7 @@
   <ItemGroup>
     <Compile Include="BaseAnalyticsService.cs" />
     <Compile Include="ServiceModel\Attritube\HttpPropertyAttribute.cs" />
+    <Compile Include="ServiceModel\Model\IAppTracking.cs" />
     <Compile Include="ServiceModel\Model\TempEventCollection.cs" />
     <Compile Include="ServiceModel\ServiceParameterConverter\IServiceParameterConveter.cs" />
     <Compile Include="ServiceModel\Attritube\HttpIgnoreAttribute.cs" />

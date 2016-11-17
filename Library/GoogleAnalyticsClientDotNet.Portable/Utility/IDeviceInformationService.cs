@@ -52,9 +52,10 @@
         /// </summary>
         bool IsXBOX { get; }
 
-        /// <summary>
-        /// 記憶體限制 (MB)
-        /// </summary>
-        ulong MemoryLimit { get; }
+        string SystemArchitecture { get; }
+
+        string OperationSystemVersionBuild { get; }
+
+        bool IsTouchEnabled { get; }
     }
 }

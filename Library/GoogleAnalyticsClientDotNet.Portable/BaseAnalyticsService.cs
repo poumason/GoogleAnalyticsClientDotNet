@@ -9,9 +9,22 @@ using System.Threading.Tasks;
 
 namespace GoogleAnalyticsClientDotNet
 {
-    public abstract class BaseAnalyticsService : IAnalyticsService, IDisposable
+    public abstract class BaseAnalyticsService : IAnalyticsService, IDisposable, IAppTracking
     {
         public string TrackingID { get; set; }
+
+        public string AppName { get; set; }
+
+        public string AppId { get; set; }
+
+        public string AppVersion { get; set; }
+
+        public string AppNamespace { get; set; }
+
+        /// <summary>
+        /// Is batch send events. true: batch send; false: auto send.
+        /// </summary>
+        public bool IsBatchSendEvent { get; set; } = false;
 
         protected INetworkHelper NetworkTool { get; set; }
 
@@ -20,6 +33,8 @@ namespace GoogleAnalyticsClientDotNet
         protected Timer looptimer { get; private set; }
 
         private HttpService httpService;
+
+        protected string DefaultUserAgent { get; set; }
 
         public virtual void Initialize(string trackingId)
         {
@@ -35,6 +50,26 @@ namespace GoogleAnalyticsClientDotNet
             StartTimer();
         }
 
+        public void Initialize(string trackingId, string appName, string appId, string appVersion)
+        {
+            AppId = appId;
+            AppName = appName;
+            AppVersion = appVersion;
+            Initialize(trackingId);
+        }
+
+        public void TrackEvent(string categroy, string action, string label, string value, string screenName)
+        {
+            TrackEvent(new EventParameter
+            {
+                Category = categroy,
+                Action = action,
+                Label = label,
+                Value = value,
+                ScreenName = screenName
+            });
+        }
+
         public void TrackEvent(EventParameter eventItem)
         {
             if (eventItem == null)
@@ -43,6 +78,14 @@ namespace GoogleAnalyticsClientDotNet
             }
 
             eventItem.TrakingID = TrackingID;
+            eventItem.ApplicationId = AppId;
+            eventItem.ApplicationName = AppName;
+            eventItem.ApplicationVersion = AppVersion;
+
+            if (string.IsNullOrEmpty(eventItem.UserAgent))
+            {
+                eventItem.UserAgent = DefaultUserAgent;
+            }
 
             string postContent = string.Empty;
 
@@ -59,38 +102,6 @@ namespace GoogleAnalyticsClientDotNet
             }
 
             SendTrack(postContent);
-        }
-
-        private async Task ImportEvents()
-        {
-            try
-            {
-                TempEventCollection collectionItem = null;
-                var tempJson = await ReadFile();
-
-                if (string.IsNullOrEmpty(tempJson) == false)
-                {
-                    collectionItem = JsonConvert.DeserializeObject<TempEventCollection>(tempJson);
-                }
-
-                if (collectionItem == null)
-                {
-                    return;
-                }
-                else
-                {
-                    foreach (var item in collectionItem.Events)
-                    {
-                        TempEventCollection.Enqueue(item);
-                    }
-                }
-            }
-            catch (Exception)
-            {
-#if DEBUG
-                throw;
-#endif
-            }
         }
 
         public async Task SaveTempEventsData()
@@ -129,7 +140,7 @@ namespace GoogleAnalyticsClientDotNet
             }
         }
 
-#region Timer
+        #region Timer
         protected void StartTimer()
         {
             if (looptimer == null)
@@ -161,15 +172,47 @@ namespace GoogleAnalyticsClientDotNet
             StartTimer();
         }
 
-#endregion
+        #endregion
+
+        private async Task ImportEvents()
+        {
+            try
+            {
+                TempEventCollection collectionItem = null;
+                var tempJson = await ReadFile();
+
+                if (string.IsNullOrEmpty(tempJson) == false)
+                {
+                    collectionItem = JsonConvert.DeserializeObject<TempEventCollection>(tempJson);
+                }
+
+                if (collectionItem == null)
+                {
+                    return;
+                }
+                else
+                {
+                    foreach (var item in collectionItem.Events)
+                    {
+                        TempEventCollection.Enqueue(item);
+                    }
+                }
+            }
+            catch (Exception)
+            {
+#if DEBUG
+                throw;
+#endif
+            }
+        }
 
         protected abstract Task<string> ReadFile();
 
         protected abstract Task WriteFile(string data);
 
-        protected abstract Task<object> GetGoogleAnalyticsTempFile();
-
         protected abstract void Reset();
+
+        protected abstract string BuildUserAgent();
 
         private void SendTrack(string postContent)
         {
@@ -178,7 +221,7 @@ namespace GoogleAnalyticsClientDotNet
                 return;
             }
 
-            if (NetworkTool.IsNetworkAvailable)
+            if (NetworkTool.IsNetworkAvailable && IsBatchSendEvent)
             {
                 var task = httpService.PostAsync(CommonDefine.GOOGLE_ANALYTICS_COLLECT_URl, postContent);
                 Debug.WriteLine("GoogleAnalytics: Send");

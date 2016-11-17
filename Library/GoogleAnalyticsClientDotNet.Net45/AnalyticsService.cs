@@ -1,4 +1,5 @@
 ﻿using GoogleAnalyticsClientDotNet.Utility;
+using System;
 using System.IO;
 using System.Text;
 using System.Threading.Tasks;
@@ -11,12 +12,14 @@ namespace GoogleAnalyticsClientDotNet
         {
             NetworkTool = new NetworkHelper();
             base.Initialize(trackingId);
-            RegistWindowClose();            
+            DefaultUserAgent = BuildUserAgent();
         }
 
-        protected override Task<object> GetGoogleAnalyticsTempFile()
+        protected override string BuildUserAgent()
         {
-            return null;
+            var device = new DeviceInformationService();
+            string touch = device.IsTouchEnabled ? "Touch;" : string.Empty;
+            return $"Mozilla/5.0 (compatible; MSIE 10.0; Windows NT 6.2; {touch} {device.SystemArchitecture}; {device.SystemManufacturer}; {device.ModelName}; Trident/6.0)";
         }
 
         protected override Task<string> ReadFile()
@@ -32,7 +35,6 @@ namespace GoogleAnalyticsClientDotNet
 #if DEBUG
                 throw;
 #endif
-                content = string.Empty;
             }
 
             return Task.FromResult(content);

@@ -1,8 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Management;
+using System.Windows.Input;
 
 namespace GoogleAnalyticsClientDotNet.Utility
 {
@@ -39,21 +38,10 @@ namespace GoogleAnalyticsClientDotNet.Utility
                 return false;
             }
         }
-
-        public ulong MemoryLimit
-        {
-            get
-            {
-                return 0;
-            }
-        }
-
+        
         public string ModelName
         {
-            get
-            {
-                return Environment.MachineName;
-            }
+            get; private set;
         }
 
         public string Name
@@ -80,19 +68,71 @@ namespace GoogleAnalyticsClientDotNet.Utility
             }
         }
 
-        public string SystemManufacturer
+        public string OperationSystemVersionBuild
+        {
+            get { return string.Empty; }
+        }
+
+        public bool IsTouchEnabled
         {
             get
             {
-                return Environment.SystemDirectory;
+                return Tablet.TabletDevices.Cast<TabletDevice>().Any(dev => dev.Type == TabletDeviceType.Touch);
             }
         }
 
+        public string SystemArchitecture
+        {
+            get { return Environment.GetEnvironmentVariable("PROCESSOR_ARCHITECTURE"); }
+        }
+
+        public string SystemManufacturer
+        {
+            get; private set;
+        }
+
+        private static string uniqueId;
         public string UniqueId
         {
             get
             {
-                return string.Empty;
+                if (string.IsNullOrEmpty(uniqueId) == false)
+                {
+                    return uniqueId;
+                }
+                
+                ManagementClass mc = new ManagementClass("win32_processor");
+                ManagementObjectCollection moc = mc.GetInstances();
+
+                foreach (ManagementObject mo in moc)
+                {
+                    if (uniqueId == "")
+                    {
+                        //Get only the first CPU's ID
+                        uniqueId = mo.Properties["processorID"].Value.ToString();
+                        break;
+                    }
+                }
+
+                return uniqueId;
+            }
+        }
+
+        public DeviceInformationService()
+        {
+            SelectQuery query = new SelectQuery(@"Select * from Win32_ComputerSystem");
+
+            //initialize the searcher with the query it is supposed to execute
+            using (ManagementObjectSearcher searcher = new ManagementObjectSearcher(query))
+            {
+                //execute the query
+                foreach (System.Management.ManagementObject process in searcher.Get())
+                {
+                    //print system info
+                    process.Get();
+                    SystemManufacturer = $"{process["Manufacturer"]}";
+                    ModelName = $"{process["Model"]}";
+                }
             }
         }
     }

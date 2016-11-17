@@ -79,9 +79,6 @@ namespace GoogleAnalysisClientDotNet.App.UWP
             eventData.Label = "";
             eventData.ScreenName = "";
             eventData.ClientId = eventData.UserId = "";
-            eventData.UserAgent = $"{deviceService.OperatingSystem} {deviceService.OperationSystemVersion} {deviceService.DeviceFamily}";
-            eventData.OperatingSystem = deviceService.OperatingSystem;
-
             service.TrackEvent(eventData);
             StartTimer();
         }
