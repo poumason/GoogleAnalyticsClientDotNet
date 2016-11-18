@@ -11,12 +11,13 @@ namespace GoogleAnalyticsClientDotNet
         {
             NetworkTool = new NetworkHelper();
             base.Initialize(trackingId);
-            RegistWindowClose();            
+            DefaultUserAgent = BuildUserAgent();
         }
 
-        protected override Task<object> GetGoogleAnalyticsTempFile()
+        protected override string BuildUserAgent()
         {
-            return null;
+            var device = new DeviceInformationService();
+            return $"Mozilla/5.0 (compatible; MSIE {device.IEVersion}.0; Windows NT {device.OperationSystemVersion}; Trident/{device.TridentVersion}.0)";
         }
 
         protected override Task<string> ReadFile()
@@ -32,7 +33,6 @@ namespace GoogleAnalyticsClientDotNet
 #if DEBUG
                 throw;
 #endif
-                content = string.Empty;
             }
 
             return Task.FromResult(content);
@@ -51,7 +51,7 @@ namespace GoogleAnalyticsClientDotNet
 #endif
             }
 
-            return Task.FromResult(true);    
+            return Task.FromResult(true);
         }
 
         protected override void Reset()

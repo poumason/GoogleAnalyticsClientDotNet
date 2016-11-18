@@ -1,10 +1,10 @@
 ﻿using GoogleAnalyticsClientDotNet.Universal.Utility;
 using System;
+using Windows.ApplicationModel;
 using Windows.Foundation.Metadata;
 using Windows.Security.Cryptography;
 using Windows.Security.Cryptography.Core;
 using Windows.Security.ExchangeActiveSyncProvisioning;
-using Windows.System;
 using Windows.System.Profile;
 
 namespace GoogleAnalyticsClientDotNet.Utility
@@ -39,7 +39,7 @@ namespace GoogleAnalyticsClientDotNet.Utility
                 }
                 catch (Exception)
                 {
-                    // XBOX 目前會取失敗
+                    // XBOX exception
                 }
 
                 // support IoT Device
@@ -76,6 +76,11 @@ namespace GoogleAnalyticsClientDotNet.Utility
             }
         }
 
+        public string SystemArchitecture
+        {
+            get { return Package.Current.Id.Architecture.ToString(); }
+        }
+
         public string SystemManufacturer
         {
             get { return deviceInformation.SystemManufacturer; }
@@ -105,25 +110,13 @@ namespace GoogleAnalyticsClientDotNet.Utility
         {
             get { return DeviceFamily?.IndexOf("desktop", StringComparison.OrdinalIgnoreCase) >= 0; }
         }
-
-        public bool IsXBOX
-        {
-            get { return DeviceFamily?.IndexOf("xbox", StringComparison.OrdinalIgnoreCase) >= 0; }
-        }
-
-        public ulong MemoryLimit
+        
+        public bool IsTouchEnabled
         {
             get
             {
-                try
-                {
-                    var limit = MemoryManager.AppMemoryUsageLimit / 1024 / 1024;
-                    return limit;
-                }
-                catch (Exception)
-                {
-                    return 0;
-                }
+                var touch = new Windows.Devices.Input.TouchCapabilities();
+                return touch.TouchPresent > 0;
             }
         }
 

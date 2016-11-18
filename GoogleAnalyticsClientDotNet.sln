@@ -17,6 +17,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GoogleAnalyticsClientDotNet
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GoogleAnalyticsClientDotNet.Net45", "Library\GoogleAnalyticsClientDotNet.Net45\GoogleAnalyticsClientDotNet.Net45.csproj", "{3BC2114D-A1F5-4AA6-98E8-E39FC5217224}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Test", "Test", "{52D1D9E1-2F7F-4012-AA9E-FC52687F0778}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU

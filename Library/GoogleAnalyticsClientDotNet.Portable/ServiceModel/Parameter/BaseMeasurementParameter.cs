@@ -7,17 +7,29 @@ namespace GoogleAnalyticsClientDotNet.ServiceModel
     /// </summary>
     public class BaseMeasurementParameter
     {
+        #region General
+
         [HttpProperty("v", HttpPropertyFor.POST)]
         public string Version { get; set; } = "1";
 
         [HttpProperty("tid", HttpPropertyFor.POST)]
         internal string TrakingID { get; set; }
 
-        //[HttpProperty("aip", HttpPropertyFor.POST, true)]
-        //public string AnonymizeIP { get; set; }
+        [HttpProperty("aip", HttpPropertyFor.POST, true)]
+        public string AnonymizeIP { get; set; }
 
         [HttpProperty("ds", HttpPropertyFor.POST)]
         public string DataSource { get; set; } = "app";
+
+        [HttpProperty("qt", HttpPropertyFor.POST)]
+        public int QueueTime { get; set; } = 0;
+
+        [HttpProperty("z", HttpPropertyFor.POST)]
+        public string CacheBuster { get; set; }
+
+        #endregion
+
+        #region User
 
         /// <summary>
         /// <para>This anonymously identifies a particular user, device, or browser instance.</para>
@@ -33,20 +45,33 @@ namespace GoogleAnalyticsClientDotNet.ServiceModel
         [HttpProperty("uid", HttpPropertyFor.POST)]
         public string UserId { get; set; }
 
+        #endregion
+
+        #region Session
+
+        [HttpProperty("sc", HttpPropertyFor.POST)]
+        public string SessionControl { get; set; }
+
+        [HttpProperty("uip", HttpPropertyFor.POST)]
+        public string IpOverride { get; set; }
+
         [HttpProperty("ua", HttpPropertyFor.POST)]
-        public string UserAgent { get; set; }
+        public string UserAgent { get; set; } = string.Empty;
 
-        [HttpProperty("t", HttpPropertyFor.POST)]
-        public string HintType { get; set; }
+        [HttpProperty("geoid", HttpPropertyFor.POST)]
+        public string GeographicalOverride { get; set; }
+        #endregion
 
-        [HttpProperty("an", HttpPropertyFor.POST)]
-        public string ApplicationName { get; set; }
+        #region SystemInfo
 
-        [HttpProperty("aid", HttpPropertyFor.POST)]
-        public string ApplicationId { get; set; }
+        [HttpProperty("sr", HttpPropertyFor.POST)]
+        public string ScreenResolution { get; set; }
 
-        [HttpProperty("av", HttpPropertyFor.POST)]
-        public string ApplicationVersion { get; set; }
+        [HttpProperty("vp", HttpPropertyFor.POST)]
+        public string ViewportSize { get; set; }
+
+        [HttpProperty("de", HttpPropertyFor.POST)]
+        public string DocumentEncoding { get; set; } = "utf-8";
 
         [HttpProperty("ul", HttpPropertyFor.POST)]
         public string UserLanguage
@@ -57,7 +82,35 @@ namespace GoogleAnalyticsClientDotNet.ServiceModel
             }
         }
 
-        [HttpProperty("os", HttpPropertyFor.POST)]
-        public string OperatingSystem { get; set; }
+        #endregion
+
+        #region Hint
+
+        /// <summary>
+        /// The type of hit.Must be one of 'pageview', 'screenview', 'event', 'transaction', 'item', 'social', 'exception', 'timing'.
+        /// </summary>
+        [HttpProperty("t", HttpPropertyFor.POST)]        
+        public string HintType { get; set; }
+
+        [HttpProperty("cd", HttpPropertyFor.POST)]
+        public string ScreenName { get; set; }
+
+        #endregion
+
+        #region App Tracking
+
+        [HttpProperty("an", HttpPropertyFor.POST)]
+        public string ApplicationName { get; set; }
+
+        [HttpProperty("aid", HttpPropertyFor.POST)]
+        public string ApplicationId { get; set; }
+
+        [HttpProperty("av", HttpPropertyFor.POST)]
+        public string ApplicationVersion { get; set; }
+
+        [HttpProperty("aiid", HttpPropertyFor.POST)]
+        public string ApplicationInstallerId { get; set; }
+
+        #endregion
     }
 }

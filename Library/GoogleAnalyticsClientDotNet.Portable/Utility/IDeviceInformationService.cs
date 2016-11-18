@@ -3,58 +3,58 @@
     public interface IDeviceInformationService
     {
         /// <summary>
-        /// 裝置唯一識別
+        /// Device unique Id.
         /// </summary>
         string UniqueId { get; }
 
         /// <summary>
-        /// 作業系統
+        /// Operation system
         /// </summary>
         string OperatingSystem { get; }
 
         /// <summary>
-        /// 作業系統版本
+        /// Operation system version.
         /// </summary>
         string OperationSystemVersion { get; }
 
         /// <summary>
-        /// 系統製造商
+        /// SystemManu facturer
         /// </summary>
         string SystemManufacturer { get; }
 
         /// <summary>
-        /// 裝置名稱
+        /// Device name
         /// </summary>
         string Name { get; }
 
         /// <summary>
-        /// 裝置模組名稱
+        /// Device model (product) name
         /// </summary>
         string ModelName { get; }
 
         /// <summary>
-        /// OS 類型
+        /// Device family
         /// </summary>
         string DeviceFamily { get; }
 
         /// <summary>
-        /// 是否為 Mobile
+        /// Is mobile device
         /// </summary>
         bool IsMobile { get; }
 
         /// <summary>
-        /// 是否為桌機
+        /// Is desktop device
         /// </summary>
         bool IsDesktop { get; }
 
         /// <summary>
-        /// 是否為 XBOX
+        /// System architecture, such as: x64, x86, arm.
         /// </summary>
-        bool IsXBOX { get; }
+        string SystemArchitecture { get; }
 
         /// <summary>
-        /// 記憶體限制 (MB)
+        /// Is supported Touch.
         /// </summary>
-        ulong MemoryLimit { get; }
+        bool IsTouchEnabled { get; }
     }
 }
