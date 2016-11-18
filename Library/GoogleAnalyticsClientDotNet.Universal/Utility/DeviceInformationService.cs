@@ -39,7 +39,7 @@ namespace GoogleAnalyticsClientDotNet.Utility
                 }
                 catch (Exception)
                 {
-                    // XBOX 目前會取失敗
+                    // XBOX exception
                 }
 
                 // support IoT Device
@@ -73,19 +73,6 @@ namespace GoogleAnalyticsClientDotNet.Utility
                 operatingSystemVersion = $"{deviceFamilyVersion.Major}.{deviceFamilyVersion.Minor}.{deviceFamilyVersion.Build}";
 
                 return operatingSystemVersion;
-            }
-        }
-
-        public string OperationSystemVersionBuild
-        {
-            get
-            {
-                string version = OperationSystemVersion;
-                if (string.IsNullOrEmpty(version) || version.LastIndexOf(".") == 0)
-                {
-                    return string.Empty;
-                }
-                return version.Substring(version.LastIndexOf(".") + 1);
             }
         }
 
@@ -123,12 +110,7 @@ namespace GoogleAnalyticsClientDotNet.Utility
         {
             get { return DeviceFamily?.IndexOf("desktop", StringComparison.OrdinalIgnoreCase) >= 0; }
         }
-
-        public bool IsXBOX
-        {
-            get { return DeviceFamily?.IndexOf("xbox", StringComparison.OrdinalIgnoreCase) >= 0; }
-        }
-
+        
         public bool IsTouchEnabled
         {
             get

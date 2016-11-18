@@ -23,9 +23,9 @@ namespace GoogleAnalyticsClientDotNet.Utility
             get { return false; }
         }
 
-        public bool IsXBOX
+        public bool IsTouchEnabled
         {
-            get { return false; }
+            get { return Tablet.TabletDevices.Cast<TabletDevice>().Any(dev => dev.Type == TabletDeviceType.Touch); }
         }
 
         public string ModelName
@@ -46,16 +46,6 @@ namespace GoogleAnalyticsClientDotNet.Utility
         public string OperationSystemVersion
         {
             get { return $"{Environment.OSVersion.Version.Major}.{Environment.OSVersion.Version.Minor}"; }
-        }
-
-        public string OperationSystemVersionBuild
-        {
-            get { return string.Empty; }
-        }
-
-        public bool IsTouchEnabled
-        {
-            get { return Tablet.TabletDevices.Cast<TabletDevice>().Any(dev => dev.Type == TabletDeviceType.Touch); }
         }
 
         public string SystemArchitecture
@@ -95,23 +85,7 @@ namespace GoogleAnalyticsClientDotNet.Utility
             }
         }
 
-        public DeviceInformationService()
-        {
-            SelectQuery query = new SelectQuery(@"Select * from Win32_ComputerSystem");
-
-            //initialize the searcher with the query it is supposed to execute
-            using (ManagementObjectSearcher searcher = new ManagementObjectSearcher(query))
-            {
-                //execute the query
-                foreach (System.Management.ManagementObject process in searcher.Get())
-                {
-                    //print system info
-                    process.Get();
-                    SystemManufacturer = $"{process["Manufacturer"]}";
-                    ModelName = $"{process["Model"]}";
-                }
-            }
-        }
+        #region IEVersion
 
         private static int ieVersion = 9;
         public int IEVersion
@@ -138,7 +112,7 @@ namespace GoogleAnalyticsClientDotNet.Utility
                 }
             }
         }
-        
+
         public int TridentVersion
         {
             get
@@ -151,6 +125,25 @@ namespace GoogleAnalyticsClientDotNet.Utility
                         return 7;
                     default:
                         return 5;
+                }
+            }
+        }
+        #endregion
+
+        public DeviceInformationService()
+        {
+            SelectQuery query = new SelectQuery(@"Select * from Win32_ComputerSystem");
+
+            //initialize the searcher with the query it is supposed to execute
+            using (ManagementObjectSearcher searcher = new ManagementObjectSearcher(query))
+            {
+                //execute the query
+                foreach (System.Management.ManagementObject process in searcher.Get())
+                {
+                    //print system info
+                    process.Get();
+                    SystemManufacturer = $"{process["Manufacturer"]}";
+                    ModelName = $"{process["Model"]}";
                 }
             }
         }

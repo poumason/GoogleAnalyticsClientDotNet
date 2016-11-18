@@ -86,7 +86,10 @@ namespace GoogleAnalyticsClientDotNet.ServiceModel
 
         #region Hint
 
-        [HttpProperty("t", HttpPropertyFor.POST)]
+        /// <summary>
+        /// The type of hit.Must be one of 'pageview', 'screenview', 'event', 'transaction', 'item', 'social', 'exception', 'timing'.
+        /// </summary>
+        [HttpProperty("t", HttpPropertyFor.POST)]        
         public string HintType { get; set; }
 
         [HttpProperty("cd", HttpPropertyFor.POST)]

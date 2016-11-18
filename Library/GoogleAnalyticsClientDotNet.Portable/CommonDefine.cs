@@ -8,7 +8,9 @@ namespace GoogleAnalyticsClientDotNet
 {
     public class CommonDefine
     {
-        public const string GOOGLE_ANALYTICS_COLLECT_URl = "https://www.google-analytics.com/collect";
+        public const string GOOGLE_ANALYTICS_COLLECT_URL = "https://www.google-analytics.com/collect";
+
+        public const string GOOGLE_ANALYTICS_BATCH_URL = "https://www.google-analytics.com/batch";
 
         public const int POSITION_TIMER_INTERVAL = 5000;
 

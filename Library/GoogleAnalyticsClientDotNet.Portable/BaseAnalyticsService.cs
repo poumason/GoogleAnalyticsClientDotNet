@@ -9,8 +9,11 @@ using System.Threading.Tasks;
 
 namespace GoogleAnalyticsClientDotNet
 {
-    public abstract class BaseAnalyticsService : IAnalyticsService, IDisposable, IAppTracking
+    public abstract class BaseAnalyticsService : IAnalyticsService, IDisposable
     {
+        private const int MAX_BATCH_LINE = 5;
+        private const int MAX_LENGTH = 1024 * 16;
+
         public string TrackingID { get; set; }
 
         public string AppName { get; set; }
@@ -174,8 +177,17 @@ namespace GoogleAnalyticsClientDotNet
             }
 
             StopTimer();
-            var sendItem = TempEventCollection.Dequeue();
-            SendTrack(sendItem);
+
+            if (TempEventCollection.Count > MAX_BATCH_LINE)
+            {
+                SendBatchTracks();
+            }
+            else
+            {
+                var sendItem = TempEventCollection.Dequeue();
+                SendTrack(sendItem);
+            }
+
             StartTimer();
         }
 
@@ -230,13 +242,54 @@ namespace GoogleAnalyticsClientDotNet
 
             if (NetworkTool.IsNetworkAvailable)
             {
-                var task = httpService.PostAsync(CommonDefine.GOOGLE_ANALYTICS_COLLECT_URl, postContent);
+                var task = httpService.PostAsync(CommonDefine.GOOGLE_ANALYTICS_COLLECT_URL, postContent);
                 Debug.WriteLine("GoogleAnalytics: Send");
             }
             else
             {
                 TempEventCollection.Enqueue(postContent);
                 Debug.WriteLine("GoogleAnalytics: Enqueue");
+            }
+        }
+
+        private void SendBatchTracks()
+        {
+            List<string> batchList = new List<string>();
+            int currentLength = 0;
+
+            for (int i = 0; i < MAX_BATCH_LINE; i++)
+            {
+                if (currentLength < (MAX_LENGTH - 50))
+                {
+                    string item = TempEventCollection.Dequeue();
+                    batchList.Add(item);
+                    currentLength = item.Length;
+                }
+                else
+                {
+                    break;
+                }
+            }
+
+            if (batchList.Count == 0)
+            {
+                return;
+            }
+
+            string batchTracks = string.Join("\r\n", batchList);
+
+            if (NetworkTool.IsNetworkAvailable)
+            {
+                var task = httpService.PostAsync(CommonDefine.GOOGLE_ANALYTICS_BATCH_URL, batchTracks);
+                Debug.WriteLine("GoogleAnalytics: batch Send");
+            }
+            else
+            {
+                foreach (var item in batchList)
+                {
+                    TempEventCollection.Enqueue(item);
+                }
+                Debug.WriteLine("GoogleAnalytics: batch Enqueue");
             }
         }
 
