@@ -101,7 +101,14 @@ namespace GoogleAnalyticsClientDotNet
                 return;
             }
 
-            SendTrack(postContent);
+            if (IsBatchSendEvent)
+            {
+                SendTrack(postContent);
+            }
+            else
+            {
+                TempEventCollection.Enqueue(postContent);
+            }
         }
 
         public async Task SaveTempEventsData()
@@ -221,7 +228,7 @@ namespace GoogleAnalyticsClientDotNet
                 return;
             }
 
-            if (NetworkTool.IsNetworkAvailable && IsBatchSendEvent)
+            if (NetworkTool.IsNetworkAvailable)
             {
                 var task = httpService.PostAsync(CommonDefine.GOOGLE_ANALYTICS_COLLECT_URl, postContent);
                 Debug.WriteLine("GoogleAnalytics: Send");

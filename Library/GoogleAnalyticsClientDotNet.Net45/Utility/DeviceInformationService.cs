@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.Win32;
+using System;
 using System.Linq;
 using System.Management;
 using System.Windows.Input;
@@ -9,36 +10,24 @@ namespace GoogleAnalyticsClientDotNet.Utility
     {
         public string DeviceFamily
         {
-            get
-            {
-                return string.Empty;
-            }
+            get { return string.Empty; }
         }
 
         public bool IsDesktop
         {
-            get
-            {
-                return true;
-            }
+            get { return true; }
         }
 
         public bool IsMobile
         {
-            get
-            {
-                return false;
-            }
+            get { return false; }
         }
 
         public bool IsXBOX
         {
-            get
-            {
-                return false;
-            }
+            get { return false; }
         }
-        
+
         public string ModelName
         {
             get; private set;
@@ -46,26 +35,17 @@ namespace GoogleAnalyticsClientDotNet.Utility
 
         public string Name
         {
-            get
-            {
-                return Environment.UserName;
-            }
+            get { return Environment.UserName; }
         }
 
         public string OperatingSystem
         {
-            get
-            {
-                return Environment.OSVersion.Platform.ToString();
-            }
+            get { return Environment.OSVersion.Platform.ToString(); }
         }
 
         public string OperationSystemVersion
         {
-            get
-            {
-                return Environment.OSVersion.VersionString;
-            }
+            get { return $"{Environment.OSVersion.Version.Major}.{Environment.OSVersion.Version.Minor}"; }
         }
 
         public string OperationSystemVersionBuild
@@ -75,10 +55,7 @@ namespace GoogleAnalyticsClientDotNet.Utility
 
         public bool IsTouchEnabled
         {
-            get
-            {
-                return Tablet.TabletDevices.Cast<TabletDevice>().Any(dev => dev.Type == TabletDeviceType.Touch);
-            }
+            get { return Tablet.TabletDevices.Cast<TabletDevice>().Any(dev => dev.Type == TabletDeviceType.Touch); }
         }
 
         public string SystemArchitecture
@@ -100,7 +77,7 @@ namespace GoogleAnalyticsClientDotNet.Utility
                 {
                     return uniqueId;
                 }
-                
+
                 ManagementClass mc = new ManagementClass("win32_processor");
                 ManagementObjectCollection moc = mc.GetInstances();
 
@@ -132,6 +109,48 @@ namespace GoogleAnalyticsClientDotNet.Utility
                     process.Get();
                     SystemManufacturer = $"{process["Manufacturer"]}";
                     ModelName = $"{process["Model"]}";
+                }
+            }
+        }
+
+        private static int ieVersion = 9;
+        public int IEVersion
+        {
+            get
+            {
+                if (ieVersion > 0)
+                {
+                    return ieVersion;
+                }
+
+                var version = Registry.LocalMachine.OpenSubKey(@"Software\Microsoft\Internet Explorer").GetValue("Version");
+
+                if (version == null)
+                {
+                    return 0;
+                }
+                else
+                {
+                    string verStr = version.ToString();
+                    verStr = verStr.Substring(0, verStr.IndexOf("."));
+                    ieVersion = int.Parse(verStr);
+                    return ieVersion;
+                }
+            }
+        }
+        
+        public int TridentVersion
+        {
+            get
+            {
+                switch (IEVersion)
+                {
+                    case 10:
+                        return 6;
+                    case 11:
+                        return 7;
+                    default:
+                        return 5;
                 }
             }
         }

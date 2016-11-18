@@ -1,5 +1,4 @@
 ﻿using GoogleAnalyticsClientDotNet.Utility;
-using System;
 using System.IO;
 using System.Text;
 using System.Threading.Tasks;
@@ -18,8 +17,7 @@ namespace GoogleAnalyticsClientDotNet
         protected override string BuildUserAgent()
         {
             var device = new DeviceInformationService();
-            string touch = device.IsTouchEnabled ? "Touch;" : string.Empty;
-            return $"Mozilla/5.0 (compatible; MSIE 10.0; Windows NT 6.2; {touch} {device.SystemArchitecture}; {device.SystemManufacturer}; {device.ModelName}; Trident/6.0)";
+            return $"Mozilla/5.0 (compatible; MSIE {device.IEVersion}.0; Windows NT {device.OperationSystemVersion}; Trident/{device.TridentVersion}.0)";
         }
 
         protected override Task<string> ReadFile()
@@ -53,7 +51,7 @@ namespace GoogleAnalyticsClientDotNet
 #endif
             }
 
-            return Task.FromResult(true);    
+            return Task.FromResult(true);
         }
 
         protected override void Reset()
