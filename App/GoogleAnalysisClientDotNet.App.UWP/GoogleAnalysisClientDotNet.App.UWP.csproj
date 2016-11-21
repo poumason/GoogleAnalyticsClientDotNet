@@ -126,10 +126,6 @@
     </Page>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\Library\GoogleAnalyticsClientDotNet.Portable\GoogleAnalyticsClientDotNet.csproj">
-      <Project>{AD5E2505-1D4F-4CBF-9D57-6BFACF29397E}</Project>
-      <Name>GoogleAnalyticsClientDotNet</Name>
-    </ProjectReference>
     <ProjectReference Include="..\..\Library\GoogleAnalyticsClientDotNet.Universal\GoogleAnalyticsClientDotNet.Universal.csproj">
       <Project>{a0096f2c-7b88-40b9-86d7-ba89baa00f9b}</Project>
       <Name>GoogleAnalyticsClientDotNet.Universal</Name>

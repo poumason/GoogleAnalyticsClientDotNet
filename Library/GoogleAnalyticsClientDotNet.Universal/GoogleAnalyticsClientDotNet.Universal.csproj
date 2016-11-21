@@ -112,12 +112,6 @@
     <EmbeddedResource Include="Properties\GoogleAnalyticsClientDotNet.Universal.rd.xml" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\GoogleAnalyticsClientDotNet.Portable\GoogleAnalyticsClientDotNet.csproj">
-      <Project>{ad5e2505-1d4f-4cbf-9d57-6bfacf29397e}</Project>
-      <Name>GoogleAnalyticsClientDotNet</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
     <SDKReference Include="WindowsDesktop, Version=10.0.10586.0">
       <Name>Windows Desktop Extensions for the UWP</Name>
     </SDKReference>
@@ -131,6 +125,7 @@
   <ItemGroup>
     <Folder Include="ServiceModel\" />
   </ItemGroup>
+  <Import Project="..\GoogleAnalyticsClientDotNet.Shared\GoogleAnalyticsClientDotNet.Shared.projitems" Label="Shared" />
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
     <VisualStudioVersion>14.0</VisualStudioVersion>
   </PropertyGroup>

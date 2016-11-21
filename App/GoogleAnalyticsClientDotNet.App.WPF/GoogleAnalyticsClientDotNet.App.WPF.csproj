@@ -101,10 +101,6 @@
       <Project>{3bc2114d-a1f5-4aa6-98e8-e39fc5217224}</Project>
       <Name>GoogleAnalyticsClientDotNet.Net45</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\Library\GoogleAnalyticsClientDotNet.Portable\GoogleAnalyticsClientDotNet.csproj">
-      <Project>{AD5E2505-1D4F-4CBF-9D57-6BFACF29397E}</Project>
-      <Name>GoogleAnalyticsClientDotNet</Name>
-    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

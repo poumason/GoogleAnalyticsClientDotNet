@@ -1,0 +1,30 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <MSBuildAllProjects>$(MSBuildAllProjects);$(MSBuildThisFileFullPath)</MSBuildAllProjects>
+    <HasSharedItems>true</HasSharedItems>
+    <SharedGUID>c47fd564-e9d8-4042-ba81-8ebf448d3bbe</SharedGUID>
+  </PropertyGroup>
+  <PropertyGroup Label="Configuration">
+    <Import_RootNamespace>GoogleAnalyticsClientDotNet.Shared</Import_RootNamespace>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="$(MSBuildThisFileDirectory)BaseAnalyticsService.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)CommonDefine.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)IAnalyticsService.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ServiceModel\Attritube\HttpIgnoreAttribute.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ServiceModel\Attritube\HttpPropertyAttribute.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ServiceModel\Attritube\HttpRawStringPropertyAttribute.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ServiceModel\Enum\HttpPropertyFor.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ServiceModel\Model\TempEventCollection.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ServiceModel\ParameterPacker\HttpParameterPacker.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ServiceModel\ParameterPacker\HttpParameterPackResult.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ServiceModel\Parameter\BaseMeasurementParameter.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ServiceModel\Parameter\EventParameter.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ServiceModel\ServiceParameterConverter\IServiceParameterConveter.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ServiceModel\Service\HttpService.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Utility\DictionaryExtension.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Utility\IDeviceInformationService.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Utility\INetworkHelper.cs" />
+  </ItemGroup>
+</Project>

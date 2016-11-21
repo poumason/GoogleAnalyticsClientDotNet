@@ -19,7 +19,14 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GoogleAnalyticsClientDotNet
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Test", "Test", "{52D1D9E1-2F7F-4012-AA9E-FC52687F0778}"
 EndProject
+Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "GoogleAnalyticsClientDotNet.Shared", "Library\GoogleAnalyticsClientDotNet.Shared\GoogleAnalyticsClientDotNet.Shared.shproj", "{C47FD564-E9D8-4042-BA81-8EBF448D3BBE}"
+EndProject
 Global
+	GlobalSection(SharedMSBuildProjectFiles) = preSolution
+		Library\GoogleAnalyticsClientDotNet.Shared\GoogleAnalyticsClientDotNet.Shared.projitems*{3bc2114d-a1f5-4aa6-98e8-e39fc5217224}*SharedItemsImports = 4
+		Library\GoogleAnalyticsClientDotNet.Shared\GoogleAnalyticsClientDotNet.Shared.projitems*{a0096f2c-7b88-40b9-86d7-ba89baa00f9b}*SharedItemsImports = 4
+		Library\GoogleAnalyticsClientDotNet.Shared\GoogleAnalyticsClientDotNet.Shared.projitems*{c47fd564-e9d8-4042-ba81-8ebf448d3bbe}*SharedItemsImports = 13
+	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Debug|ARM = Debug|ARM
@@ -125,5 +132,6 @@ Global
 		{3EA11C43-2A55-4256-89E4-0ABAA07483E9} = {CE66EEDC-6C40-4821-9566-AC5D782CEA31}
 		{90D8D711-16EA-48AF-819E-3766F34FA864} = {CE66EEDC-6C40-4821-9566-AC5D782CEA31}
 		{3BC2114D-A1F5-4AA6-98E8-E39FC5217224} = {9FA35DD2-49B9-4D87-90C7-60AF1BD15037}
+		{C47FD564-E9D8-4042-BA81-8EBF448D3BBE} = {9FA35DD2-49B9-4D87-90C7-60AF1BD15037}
 	EndGlobalSection
 EndGlobal
