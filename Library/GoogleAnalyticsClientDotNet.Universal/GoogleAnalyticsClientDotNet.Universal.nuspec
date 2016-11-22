@@ -16,7 +16,6 @@
     <tags>GoogleAnalytics UniversalWindowsPlatform Event</tags>
 	<dependencies>
       <dependency id="Newtonsoft.Json" version="9.0" />
-      <dependency id="GoogleAnalyticsClientDotNet" version="1.0.0.4" />
     </dependencies>
   </metadata>
 </package>

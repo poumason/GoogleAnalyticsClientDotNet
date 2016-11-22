@@ -62,3 +62,6 @@ private async void Current_Suspending(object sender, Windows.ApplicationModel.Su
 ### Licence
 
 [Licenced under the Apache 2.0 licence](https://github.com/poumason/GoogleAnalyticsClientDotNet/blob/master/license.txt)
+
+### Reference
+[Google Analytics SDK for Windows and Windows Phone](https://googleanalyticssdk.codeplex.com/)
