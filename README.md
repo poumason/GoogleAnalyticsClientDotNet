@@ -18,8 +18,8 @@ Step 1. install nuget:
 Step 2. new the AnalyticsService instance.
 
 ```csharp
-AnalyticsService tracker = new AnalyticsService();
-service.Initialize("{tracking id}");
+AnalyticsService service = new AnalyticsService();
+service.Initialize("{tracking id}", "{appName}", "{appId}", "{appVersion}");
 ```
 
 Step 3. new the EventParameter, and set properties.
@@ -62,3 +62,6 @@ private async void Current_Suspending(object sender, Windows.ApplicationModel.Su
 ### Licence
 
 [Licenced under the Apache 2.0 licence](https://github.com/poumason/GoogleAnalyticsClientDotNet/blob/master/license.txt)
+
+### Reference
+[Google Analytics SDK for Windows and Windows Phone](https://googleanalyticssdk.codeplex.com/)

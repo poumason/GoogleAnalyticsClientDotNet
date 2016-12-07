@@ -38,7 +38,7 @@ namespace GoogleAnalyticsClientDotNet.App.WPF
             Closed += MainWindow_Closed;
 
             service = new AnalyticsService();
-            service.Initialize("{tracking id}");
+            service.Initialize("{tracking id}", "{appName}", "{appId}", "{appVersion}");
 
             deviceService = new DeviceInformationService();
         }

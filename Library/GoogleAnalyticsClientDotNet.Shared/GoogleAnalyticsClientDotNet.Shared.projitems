@@ -21,6 +21,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)ServiceModel\ParameterPacker\HttpParameterPackResult.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ServiceModel\Parameter\BaseMeasurementParameter.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ServiceModel\Parameter\EventParameter.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ServiceModel\Parameter\ScreenParameter.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ServiceModel\ServiceParameterConverter\IServiceParameterConveter.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ServiceModel\Service\HttpService.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Utility\DictionaryExtension.cs" />

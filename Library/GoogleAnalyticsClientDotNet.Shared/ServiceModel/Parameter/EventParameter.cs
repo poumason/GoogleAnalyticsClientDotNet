@@ -30,7 +30,7 @@
 
         public EventParameter()
         {
-            HintType = "event";
+            HitType = "event";
         }
     }
 }

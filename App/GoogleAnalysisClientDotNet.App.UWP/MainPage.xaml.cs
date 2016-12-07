@@ -39,7 +39,7 @@ namespace GoogleAnalysisClientDotNet.App.UWP
             Unloaded += MainPage_Unloaded;
 
             service = new AnalyticsService();
-            service.Initialize("{tracking id}");
+            service.Initialize("{tracking id}", "{appName}", "{appId}", "{appVersion}");
             service.AutoSaveEvents = true;
             deviceService = new DeviceInformationService();
         }

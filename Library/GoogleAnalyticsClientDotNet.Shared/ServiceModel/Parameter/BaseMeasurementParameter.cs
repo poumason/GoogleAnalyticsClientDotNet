@@ -90,7 +90,7 @@ namespace GoogleAnalyticsClientDotNet.ServiceModel
         /// The type of hit.Must be one of 'pageview', 'screenview', 'event', 'transaction', 'item', 'social', 'exception', 'timing'.
         /// </summary>
         [HttpProperty("t", HttpPropertyFor.POST)]        
-        public string HintType { get; set; }
+        public string HitType { get; set; }
 
         [HttpProperty("cd", HttpPropertyFor.POST)]
         public string ScreenName { get; set; }
