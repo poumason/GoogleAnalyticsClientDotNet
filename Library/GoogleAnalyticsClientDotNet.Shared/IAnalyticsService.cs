@@ -14,7 +14,7 @@ namespace GoogleAnalyticsClientDotNet
 
         void TrackEvent(string categroy, string action, string label, string value, string screenName);
 
-        void TrackEvent(EventParameter eventItem);
+        void TrackEvent(BaseMeasurementParameter eventItem);
         
         Task SaveTempEventsData();
     }

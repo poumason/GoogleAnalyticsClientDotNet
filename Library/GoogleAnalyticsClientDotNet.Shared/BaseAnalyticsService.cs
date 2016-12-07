@@ -24,6 +24,8 @@ namespace GoogleAnalyticsClientDotNet
 
         public string AppNamespace { get; set; }
 
+        public string UserId { get; set; }
+
         /// <summary>
         /// Is batch send events. true: batch send; false: auto send.
         /// </summary>
@@ -61,6 +63,15 @@ namespace GoogleAnalyticsClientDotNet
             Initialize(trackingId);
         }
 
+        public void TrackScreen(string screenName)
+        {
+            TrackEvent(new ScreenParameter
+            {
+                ScreenName = screenName,
+                UserId = UserId
+            });
+        }
+
         public void TrackEvent(string categroy, string action, string label, string value, string screenName)
         {
             TrackEvent(new EventParameter
@@ -69,11 +80,12 @@ namespace GoogleAnalyticsClientDotNet
                 Action = action,
                 Label = label,
                 Value = value,
-                ScreenName = screenName
+                ScreenName = screenName,
+                UserId = UserId,
             });
         }
 
-        public void TrackEvent(EventParameter eventItem)
+        public void TrackEvent(BaseMeasurementParameter eventItem)
         {
             if (eventItem == null)
             {
@@ -88,6 +100,11 @@ namespace GoogleAnalyticsClientDotNet
             if (string.IsNullOrEmpty(eventItem.UserAgent))
             {
                 eventItem.UserAgent = DefaultUserAgent;
+            }
+
+            if (string.IsNullOrEmpty(eventItem.UserId) && string.IsNullOrEmpty(UserId) == false)
+            {
+                eventItem.UserId = UserId;
             }
 
             string postContent = string.Empty;

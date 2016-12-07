@@ -18,8 +18,8 @@ Step 1. install nuget:
 Step 2. new the AnalyticsService instance.
 
 ```csharp
-AnalyticsService tracker = new AnalyticsService();
-service.Initialize("{tracking id}");
+AnalyticsService service = new AnalyticsService();
+service.Initialize("{tracking id}", "{appName}", "{appId}", "{appVersion}");
 ```
 
 Step 3. new the EventParameter, and set properties.
