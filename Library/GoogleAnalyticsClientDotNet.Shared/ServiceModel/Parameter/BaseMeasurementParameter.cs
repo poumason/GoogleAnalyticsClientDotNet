@@ -1,4 +1,6 @@
-﻿using System.Globalization;
+﻿using System;
+using System.Collections.Generic;
+using System.Globalization;
 
 namespace GoogleAnalyticsClientDotNet.ServiceModel
 {
@@ -89,7 +91,7 @@ namespace GoogleAnalyticsClientDotNet.ServiceModel
         /// <summary>
         /// The type of hit.Must be one of 'pageview', 'screenview', 'event', 'transaction', 'item', 'social', 'exception', 'timing'.
         /// </summary>
-        [HttpProperty("t", HttpPropertyFor.POST)]        
+        [HttpProperty("t", HttpPropertyFor.POST)]
         public string HitType { get; set; }
 
         [HttpProperty("cd", HttpPropertyFor.POST)]
@@ -112,5 +114,48 @@ namespace GoogleAnalyticsClientDotNet.ServiceModel
         public string ApplicationInstallerId { get; set; }
 
         #endregion
+
+        [HttpArrayProperty(HttpPropertyFor.POST)]
+        public Dictionary<string, string> DimessionsAndMetrics { get; private set; }
+
+        public BaseMeasurementParameter()
+        {
+            DimessionsAndMetrics = new Dictionary<string, string>();
+        }
+
+        public void SetDimessionsAndMetrics(CustomType type, int index, string value)
+        {
+            if (index < 0 || index > 200)
+            {
+                if (type == CustomType.Dimensions)
+                {
+                    throw new Exception("The dimension index must be a positive integer between 1 and 200, inclusive.");
+                }
+                else
+                {
+                    throw new Exception("The metric index must be a positive integer between 1 and 200, inclusive.");
+                }
+            }
+
+            string key = string.Empty;
+
+            if (type == CustomType.Dimensions)
+            {
+                key = $"cd{index}";
+            }
+            else
+            {
+                key = $"cm{index}";
+            }
+
+            if (DimessionsAndMetrics.ContainsKey(key))
+            {
+                DimessionsAndMetrics[key] = value;
+            }
+            else
+            {
+                DimessionsAndMetrics.Add(key, value);
+            }
+        }
     }
 }

@@ -12,9 +12,11 @@
     <Compile Include="$(MSBuildThisFileDirectory)BaseAnalyticsService.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)CommonDefine.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)IAnalyticsService.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ServiceModel\Attritube\HttpArrayPropertyAttribute.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ServiceModel\Attritube\HttpIgnoreAttribute.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ServiceModel\Attritube\HttpPropertyAttribute.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ServiceModel\Attritube\HttpRawStringPropertyAttribute.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ServiceModel\Enum\CustomType.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ServiceModel\Enum\HttpPropertyFor.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ServiceModel\Model\TempEventCollection.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ServiceModel\ParameterPacker\HttpParameterPacker.cs" />

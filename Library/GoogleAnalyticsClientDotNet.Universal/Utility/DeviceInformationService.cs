@@ -70,7 +70,7 @@ namespace GoogleAnalyticsClientDotNet.Utility
                 var analyticsInfoUtility = new AnalyticsInfoUtility();
                 var deviceFamilyVersion = analyticsInfoUtility.GetDeviceFamilyVersion();
 
-                operatingSystemVersion = $"{deviceFamilyVersion.Major}.{deviceFamilyVersion.Minor}.{deviceFamilyVersion.Build}";
+                operatingSystemVersion = $"{deviceFamilyVersion.Major}.{deviceFamilyVersion.Minor}.{deviceFamilyVersion.Build}.{deviceFamilyVersion.Revision}";
 
                 return operatingSystemVersion;
             }
