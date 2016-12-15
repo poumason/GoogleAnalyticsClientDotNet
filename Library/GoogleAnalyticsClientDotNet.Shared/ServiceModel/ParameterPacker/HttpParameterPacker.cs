@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Net;
 using System.Reflection;
 using System.Text;
 
@@ -32,6 +34,12 @@ namespace GoogleAnalyticsClientDotNet.ServiceModel
                 {
                     CreateRawStringParameter(parameter, property, rawStringAttribute, packResult, getParameters);
                     continue;
+                }
+
+                var arrayAttribute = property.GetCustomAttribute<HttpArrayPropertyAttribute>();
+                if (arrayAttribute != null)
+                {
+                    CreateArrayParameter(parameter, property, arrayAttribute, packResult, getParameters);
                 }
             }
 
@@ -122,5 +130,44 @@ namespace GoogleAnalyticsClientDotNet.ServiceModel
         }
 
         #endregion        
+
+        private static void CreateArrayParameter(object parameter, PropertyInfo property, HttpArrayPropertyAttribute attribute, HttpParameterPackResult packResult, StringBuilder getParameters)
+        {
+            var value = property.GetValue(parameter, null);
+
+            if (value == null || value is Dictionary<string, string> == false)
+            {
+                return;
+            }
+
+            var dictionary = value as Dictionary<string, string>;
+
+            switch (attribute.For)
+            {
+                case HttpPropertyFor.GET:
+                    foreach (KeyValuePair<string, string> item in dictionary)
+                    {
+                        if (string.IsNullOrEmpty(item.Value) || string.IsNullOrEmpty(item.Key))
+                        {
+                            continue;
+                        }
+
+                        var urlEncodedValue = WebUtility.UrlEncode(item.Value);
+                        getParameters.Append($"&{item.Key}={urlEncodedValue}");
+                    }
+                    break;
+                case HttpPropertyFor.POST:
+                    foreach (KeyValuePair<string, string> item in dictionary)
+                    {
+                        if (string.IsNullOrEmpty(item.Value) || string.IsNullOrEmpty(item.Key))
+                        {
+                            continue;
+                        }
+
+                        packResult.PostParameterMap.Add(item.Key, item.Value);
+                    }
+                    break;
+            }
+        }
     }
 }
