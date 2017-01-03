@@ -14,7 +14,7 @@ namespace GoogleAnalyticsClientDotNet
 
         public const int POSITION_TIMER_INTERVAL = 5000;
 
-        public const int HEART_RATE_INTERVAL = 5000;
+        public const int HEART_RATE_INTERVAL = 60000;
 
         public const string GA_FOLDER_NAME = "GoogleAnalyticsClientDotNet";
 
