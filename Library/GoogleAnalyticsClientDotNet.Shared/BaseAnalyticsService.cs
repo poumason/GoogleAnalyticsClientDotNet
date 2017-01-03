@@ -26,6 +26,8 @@ namespace GoogleAnalyticsClientDotNet
 
         public string UserId { get; set; }
 
+        public string ClientId { get; set; }
+
         /// <summary>
         /// Is batch send events. true: batch send; false: auto send.
         /// </summary>
@@ -35,7 +37,9 @@ namespace GoogleAnalyticsClientDotNet
 
         protected Queue<string> TempEventCollection { get; private set; }
 
-        protected Timer looptimer { get; private set; }
+        protected Timer SenderTimer { get; private set; }
+
+        protected Timer HeartRateTimer { get; private set; }
 
         private HttpService httpService;
 
@@ -52,7 +56,8 @@ namespace GoogleAnalyticsClientDotNet
                 await ImportEvents();
             });
 
-            StartTimer();
+            StartSenderTimer();
+            StartHeartRateTimer();
         }
 
         public void Initialize(string trackingId, string appName, string appId, string appVersion)
@@ -68,7 +73,8 @@ namespace GoogleAnalyticsClientDotNet
             TrackEvent(new ScreenParameter
             {
                 ScreenName = screenName,
-                UserId = UserId
+                UserId = UserId,
+                ClientId = ClientId
             });
         }
 
@@ -82,6 +88,7 @@ namespace GoogleAnalyticsClientDotNet
                 Value = value,
                 ScreenName = screenName,
                 UserId = UserId,
+                ClientId = ClientId
             });
         }
 
@@ -123,11 +130,11 @@ namespace GoogleAnalyticsClientDotNet
 
             if (IsBatchSendEvent)
             {
-                SendTrack(postContent);
+                TempEventCollection.Enqueue(postContent);
             }
             else
             {
-                TempEventCollection.Enqueue(postContent);
+                SendTrack(postContent);
             }
         }
 
@@ -168,32 +175,32 @@ namespace GoogleAnalyticsClientDotNet
         }
 
         #region Timer
-        protected void StartTimer()
+        protected void StartSenderTimer()
         {
-            if (looptimer == null)
+            if (SenderTimer == null)
             {
-                looptimer = new Timer(TimerInterval_Callback, null, Timeout.Infinite, CommonDefine.POSITION_TIMER_INTERVAL);
+                SenderTimer = new Timer(SenderTimerInterval_Callback, null, Timeout.Infinite, CommonDefine.POSITION_TIMER_INTERVAL);
             }
 
-            looptimer.Change(0, CommonDefine.POSITION_TIMER_INTERVAL);
+            SenderTimer.Change(0, CommonDefine.POSITION_TIMER_INTERVAL);
         }
 
-        protected void StopTimer()
+        protected void StopSenderTimer()
         {
-            if (looptimer != null)
+            if (SenderTimer != null)
             {
-                looptimer.Change(Timeout.Infinite, Timeout.Infinite);
+                SenderTimer.Change(Timeout.Infinite, Timeout.Infinite);
             }
         }
 
-        private void TimerInterval_Callback(object sender)
+        private void SenderTimerInterval_Callback(object sender)
         {
             if (TempEventCollection.Count <= 0)
             {
                 return;
             }
 
-            StopTimer();
+            StopSenderTimer();
 
             if (TempEventCollection.Count > MAX_BATCH_LINE)
             {
@@ -205,7 +212,38 @@ namespace GoogleAnalyticsClientDotNet
                 SendTrack(sendItem);
             }
 
-            StartTimer();
+            StartSenderTimer();
+        }
+
+        private void StartHeartRateTimer()
+        {
+            if (HeartRateTimer == null)
+            {
+                HeartRateTimer = new Timer(HeartRateInterval_Callback, null, Timeout.Infinite, CommonDefine.HEART_RATE_INTERVAL);
+            }
+
+            HeartRateTimer.Change(0, CommonDefine.HEART_RATE_INTERVAL);
+        }
+
+        private void StopHeartRateTimer()
+        {
+            if (HeartRateTimer != null)
+            {
+                HeartRateTimer.Change(Timeout.Infinite, Timeout.Infinite);
+            }
+        }
+
+        private void HeartRateInterval_Callback(object sender)
+        {
+            TrackEvent(new EventParameter
+            {
+                Category = "GAClientDotNet",
+                ScreenName = "GAClientDotNet",
+                Action = "PING_PUNG",
+                Label= "SDK",
+                UserId = UserId,
+                ClientId = ClientId,            
+            });
         }
 
         #endregion
@@ -313,9 +351,13 @@ namespace GoogleAnalyticsClientDotNet
         public void Dispose()
         {
             Reset();
-            StopTimer();
-            looptimer?.Dispose();
-            looptimer = null;
+            StopSenderTimer();
+            SenderTimer?.Dispose();
+            SenderTimer = null;
+
+            StopHeartRateTimer();
+            HeartRateTimer?.Dispose();
+            HeartRateTimer = null;
 
             GC.SuppressFinalize(this);
         }

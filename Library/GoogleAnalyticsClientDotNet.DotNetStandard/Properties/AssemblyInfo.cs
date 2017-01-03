@@ -1,18 +1,20 @@
-﻿using System.Reflection;
+﻿using System.Resources;
+using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("GoogleAnalyticsClientDotNet.Universal")]
-[assembly: AssemblyDescription("The project provides basic Event track for using Google Analytics.")]
+[assembly: AssemblyTitle("GoogleAnalyticsClientDotNet.DotNetStandard")]
+[assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("Pou")]
-[assembly: AssemblyProduct("GoogleAnalyticsClientDotNet.Universal")]
-[assembly: AssemblyCopyright("Copyright © Pou 2016")]
+[assembly: AssemblyCompany("")]
+[assembly: AssemblyProduct("GoogleAnalyticsClientDotNet.DotNetStandard")]
+[assembly: AssemblyCopyright("Copyright ©  2016")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
+[assembly: NeutralResourcesLanguage("en")]
 
 // Version information for an assembly consists of the following four values:
 //
@@ -24,6 +26,5 @@ using System.Runtime.InteropServices;
 // You can specify all the values or you can default the Build and Revision Numbers 
 // by using the '*' as shown below:
 // [assembly: AssemblyVersion("1.0.*")]
-[assembly: AssemblyVersion("1.0.0.12")]
-[assembly: AssemblyFileVersion("1.0.0.12")]
-[assembly: ComVisible(false)]
+[assembly: AssemblyVersion("1.0.0.0")]
+[assembly: AssemblyFileVersion("1.0.0.0")]

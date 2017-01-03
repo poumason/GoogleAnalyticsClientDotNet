@@ -27,8 +27,6 @@ namespace GoogleAnalysisClientDotNet.App.UWP
     {
         DispatcherTimer timer;
 
-        AnalyticsService service;
-
         DeviceInformationService deviceService;
 
         public MainPage()
@@ -37,11 +35,11 @@ namespace GoogleAnalysisClientDotNet.App.UWP
 
             Loaded += MainPage_Loaded;
             Unloaded += MainPage_Unloaded;
-
-            service = new AnalyticsService();
-            service.Initialize("{tracking id}", "{appName}", "{appId}", "{appVersion}");
-            service.AutoSaveEvents = true;
+          
             deviceService = new DeviceInformationService();
+
+            App.Service.UserId = GetUserID();
+            App.Service.ClientId = Guid.NewGuid().ToString();
         }
 
         private void MainPage_Unloaded(object sender, RoutedEventArgs e)
@@ -64,7 +62,7 @@ namespace GoogleAnalysisClientDotNet.App.UWP
             if (timer == null)
             {
                 timer = new DispatcherTimer();
-                timer.Interval = TimeSpan.FromSeconds(10);
+                timer.Interval = TimeSpan.FromSeconds(20);
                 timer.Tick += Timer_Tick;
             }
             timer.Start();
@@ -73,14 +71,24 @@ namespace GoogleAnalysisClientDotNet.App.UWP
         private void Timer_Tick(object sender, object e)
         {
             StopTimer();
+
             EventParameter eventData = new EventParameter();
             eventData.Category = "";
             eventData.Action = "";
             eventData.Label = "";
             eventData.ScreenName = "";
-            eventData.ClientId = eventData.UserId = "";
-            service.TrackEvent(eventData);
+
+            App.Service.TrackEvent(eventData);
+
             StartTimer();
+        }
+
+        Random randomInstance = new Random();
+
+        private string GetUserID()
+        {
+            int idx = randomInstance.Next(0, 200);
+            return $"poulin_{idx}@live.com";
         }
     }
 }
