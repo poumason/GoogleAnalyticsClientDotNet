@@ -19,6 +19,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Test", "Test", "{52D1D9E1-2
 EndProject
 Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "GoogleAnalyticsClientDotNet.Shared", "Library\GoogleAnalyticsClientDotNet.Shared\GoogleAnalyticsClientDotNet.Shared.shproj", "{C47FD564-E9D8-4042-BA81-8EBF448D3BBE}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GoogleAnalyticsClientDotNet.DotNetStandard", "Library\GoogleAnalyticsClientDotNet.DotNetStandard\GoogleAnalyticsClientDotNet.DotNetStandard.csproj", "{D02BDC37-4D09-404C-B884-2A158EBC2353}"
+EndProject
 Global
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
 		Library\GoogleAnalyticsClientDotNet.Shared\GoogleAnalyticsClientDotNet.Shared.projitems*{3bc2114d-a1f5-4aa6-98e8-e39fc5217224}*SharedItemsImports = 4
@@ -104,6 +106,22 @@ Global
 		{3BC2114D-A1F5-4AA6-98E8-E39FC5217224}.Release|x64.Build.0 = Release|Any CPU
 		{3BC2114D-A1F5-4AA6-98E8-E39FC5217224}.Release|x86.ActiveCfg = Release|Any CPU
 		{3BC2114D-A1F5-4AA6-98E8-E39FC5217224}.Release|x86.Build.0 = Release|Any CPU
+		{D02BDC37-4D09-404C-B884-2A158EBC2353}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D02BDC37-4D09-404C-B884-2A158EBC2353}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D02BDC37-4D09-404C-B884-2A158EBC2353}.Debug|ARM.ActiveCfg = Debug|Any CPU
+		{D02BDC37-4D09-404C-B884-2A158EBC2353}.Debug|ARM.Build.0 = Debug|Any CPU
+		{D02BDC37-4D09-404C-B884-2A158EBC2353}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{D02BDC37-4D09-404C-B884-2A158EBC2353}.Debug|x64.Build.0 = Debug|Any CPU
+		{D02BDC37-4D09-404C-B884-2A158EBC2353}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{D02BDC37-4D09-404C-B884-2A158EBC2353}.Debug|x86.Build.0 = Debug|Any CPU
+		{D02BDC37-4D09-404C-B884-2A158EBC2353}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D02BDC37-4D09-404C-B884-2A158EBC2353}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D02BDC37-4D09-404C-B884-2A158EBC2353}.Release|ARM.ActiveCfg = Release|Any CPU
+		{D02BDC37-4D09-404C-B884-2A158EBC2353}.Release|ARM.Build.0 = Release|Any CPU
+		{D02BDC37-4D09-404C-B884-2A158EBC2353}.Release|x64.ActiveCfg = Release|Any CPU
+		{D02BDC37-4D09-404C-B884-2A158EBC2353}.Release|x64.Build.0 = Release|Any CPU
+		{D02BDC37-4D09-404C-B884-2A158EBC2353}.Release|x86.ActiveCfg = Release|Any CPU
+		{D02BDC37-4D09-404C-B884-2A158EBC2353}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -114,5 +132,6 @@ Global
 		{90D8D711-16EA-48AF-819E-3766F34FA864} = {CE66EEDC-6C40-4821-9566-AC5D782CEA31}
 		{3BC2114D-A1F5-4AA6-98E8-E39FC5217224} = {9FA35DD2-49B9-4D87-90C7-60AF1BD15037}
 		{C47FD564-E9D8-4042-BA81-8EBF448D3BBE} = {9FA35DD2-49B9-4D87-90C7-60AF1BD15037}
+		{D02BDC37-4D09-404C-B884-2A158EBC2353} = {9FA35DD2-49B9-4D87-90C7-60AF1BD15037}
 	EndGlobalSection
 EndGlobal

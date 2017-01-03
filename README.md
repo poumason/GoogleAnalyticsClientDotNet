@@ -44,12 +44,16 @@ private async void MainWindow_Closed(object sender, EventArgs e)
 }
 ```
 
-Step 5. For Universal Windows Platform. User can choice to auto save events data in the Suspened.
+Step 5. For Universal Windows Platform. User need to add SaveTempEventsData method in the Suspened event.
 ```csharp
-// If set the AutoSaveEvents is false, user need to add SaveTempEventsData method in the Suspened event.
-service.AutoSaveEvents = false;
-
-private async void Current_Suspending(object sender, Windows.ApplicationModel.SuspendingEventArgs e)
+/// <summary>
+/// Invoked when application execution is being suspended.  Application state is saved
+/// without knowing whether the application will be terminated or resumed with the contents
+/// of memory still intact.
+/// </summary>
+/// <param name="sender">The source of the suspend request.</param>
+/// <param name="e">Details about the suspend request.</param>
+private async void OnSuspending(object sender, SuspendingEventArgs e)
 {
     var deferral = e.SuspendingOperation.GetDeferral();
 

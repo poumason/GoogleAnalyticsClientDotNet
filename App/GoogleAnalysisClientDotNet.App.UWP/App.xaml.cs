@@ -1,4 +1,5 @@
-﻿using System;
+﻿using GoogleAnalyticsClientDotNet;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -22,6 +23,8 @@ namespace GoogleAnalysisClientDotNet.App.UWP
     /// </summary>
     sealed partial class App : Application
     {
+        public static AnalyticsService Service { get; private set; }
+
         /// <summary>
         /// Initializes the singleton application object.  This is the first line of authored code
         /// executed, and as such is the logical equivalent of main() or WinMain().
@@ -30,6 +33,10 @@ namespace GoogleAnalysisClientDotNet.App.UWP
         {
             this.InitializeComponent();
             this.Suspending += OnSuspending;
+
+            // Initialize AnalyticsService
+            Service = new AnalyticsService();
+            Service.Initialize("{tracking id}", "{appName}", "{appId}", "{appVersion}");
         }
 
         /// <summary>
@@ -96,10 +103,16 @@ namespace GoogleAnalysisClientDotNet.App.UWP
         /// </summary>
         /// <param name="sender">The source of the suspend request.</param>
         /// <param name="e">Details about the suspend request.</param>
-        private void OnSuspending(object sender, SuspendingEventArgs e)
+        private async void OnSuspending(object sender, SuspendingEventArgs e)
         {
             var deferral = e.SuspendingOperation.GetDeferral();
             //TODO: Save application state and stop any background activity
+
+            if (Service != null)
+            {
+                await Service.SaveTempEventsData();
+            }
+
             deferral.Complete();
         }
     }

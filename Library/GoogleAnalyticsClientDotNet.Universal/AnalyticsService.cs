@@ -12,17 +12,10 @@ namespace GoogleAnalyticsClientDotNet
     {
         private StorageFile TempFile { get; set; }
 
-        /// <summary>
-        /// <para>When App be suspended, not yet sent events will be auto save.</para>
-        /// <para>default: true.</para>
-        /// </summary>
-        public bool AutoSaveEvents { get; set; } = true;
-
         public override void Initialize(string trackingId)
         {
             NetworkTool = new NetworkHelper();
             base.Initialize(trackingId);
-            RegistAppSuspending();
             DefaultUserAgent = BuildUserAgent();
         }
 
@@ -39,33 +32,8 @@ namespace GoogleAnalyticsClientDotNet
                 string touch = device.IsTouchEnabled ? "Touch;" : string.Empty;
                 return $"Mozilla/5.0 (Windows NT 10.0; {touch}{device.SystemArchitecture}; {device.SystemManufacturer}; {device.ModelName};) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/51.0.2704.79 Safari/537.36 Edge/15.14393";
             }
-        }
-
-        private void RegistAppSuspending()
-        {
-            Application.Current.Suspending -= Current_Suspending;
-            Application.Current.Suspending += Current_Suspending;
-        }
-
-        private void UnRegistAppSuspending()
-        {
-            Application.Current.Suspending -= Current_Suspending;
-        }
-
-        private async void Current_Suspending(object sender, Windows.ApplicationModel.SuspendingEventArgs e)
-        {
-            if (AutoSaveEvents == false)
-            {
-                return;
-            }
-
-            var deferral = e.SuspendingOperation.GetDeferral();
-
-            await SaveTempEventsData();
-
-            deferral.Complete();
-        }
-
+        }        
+        
         protected override async Task<string> ReadFile()
         {
             string content = string.Empty;
@@ -128,7 +96,6 @@ namespace GoogleAnalyticsClientDotNet
 
         protected override void Reset()
         {
-            UnRegistAppSuspending();
         }
     }
 }
