@@ -1,19 +1,7 @@
 ﻿using GoogleAnalyticsClientDotNet.ServiceModel;
 using GoogleAnalyticsClientDotNet.Utility;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 using System.Windows.Threading;
 
 namespace GoogleAnalyticsClientDotNet.App.WPF
@@ -59,7 +47,7 @@ namespace GoogleAnalyticsClientDotNet.App.WPF
             if (timer == null)
             {
                 timer = new DispatcherTimer();
-                timer.Interval = TimeSpan.FromSeconds(10);
+                timer.Interval = TimeSpan.FromSeconds(3);
                 timer.Tick += Timer_Tick;
             }
             timer.Start();
@@ -73,10 +61,12 @@ namespace GoogleAnalyticsClientDotNet.App.WPF
             eventData.Action = "Debug_action";
             eventData.Label = "Debug_label";
             eventData.ScreenName = "Debug_screenName";
-            eventData.ClientId = "";
+            eventData.UserId = GetUserID();
             eventData.UserAgent = deviceService.ModelName;
+            eventData.ClientId = Guid.NewGuid().ToString();
 
             App.Service.TrackEvent(eventData);
+
             StartTimer();
         }
 

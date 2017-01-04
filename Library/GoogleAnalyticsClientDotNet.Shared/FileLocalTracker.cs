@@ -20,9 +20,9 @@ namespace GoogleAnalyticsClientDotNet
             return await ReadLocalFileAsync();
         }
 
-        public async Task WriteTracksAsync(IEnumerable<string> tracks)
+        public async Task WriteTracksAsync(IEnumerable<string> tracks, bool replace = false)
         {
-            await WriteLocalFileAsync(tracks);
+            await WriteLocalFileAsync(tracks, replace);
         }
     }
 }

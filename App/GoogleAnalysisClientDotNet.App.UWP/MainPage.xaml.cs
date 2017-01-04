@@ -65,6 +65,8 @@ namespace GoogleAnalysisClientDotNet.App.UWP
             eventData.Action = "Debug_action";
             eventData.Label = "Debug_label";
             eventData.ScreenName = "Debug_screenName";
+            eventData.UserId = GetUserID();
+            eventData.ClientId = Guid.NewGuid().ToString();
 
             App.Service.TrackEvent(eventData);
 

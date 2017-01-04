@@ -50,7 +50,7 @@ namespace GoogleAnalyticsClientDotNet
             return Task.FromResult(content);
         }
 
-        private async Task WriteLocalFileAsync(IEnumerable<string> tracks)
+        private async Task WriteLocalFileAsync(IEnumerable<string> tracks, bool replace)
         {
             if (tracks == null || tracks.Count() == 0)
             {
@@ -61,6 +61,16 @@ namespace GoogleAnalyticsClientDotNet
             {
                 List<string> cachedData = new List<string>();
                 cachedData.AddRange(tracks);
+
+                if (replace == false)
+                {
+                    var previousData = await ReadTrackAsync();
+                    if (previousData != null)
+                    {
+                        cachedData.AddRange(previousData);
+                    }
+                }
+
                 string data = string.Join(Environment.NewLine, cachedData);
 
                 File.WriteAllText(SourceName, data, Encoding.UTF8);

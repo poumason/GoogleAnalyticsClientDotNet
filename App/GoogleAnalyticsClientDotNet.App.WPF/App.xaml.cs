@@ -26,7 +26,7 @@ namespace GoogleAnalyticsClientDotNet.App.WPF
 
         protected async override void OnExit(ExitEventArgs e)
         {
-            await Service?.SaveTempEventsData();
+            await Service?.SaveTempEventsData(true);
 
             base.OnExit(e);
         }

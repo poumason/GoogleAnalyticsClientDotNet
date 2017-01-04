@@ -10,7 +10,7 @@ namespace GoogleAnalyticsClientDotNet
 
         string Name { get; set; }
 
-        Task WriteTracksAsync(IEnumerable<string> tracks);
+        Task WriteTracksAsync(IEnumerable<string> tracks, bool replace = false);
 
         Task<IEnumerable<string>> ReadTrackAsync();
     }
