@@ -103,6 +103,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AnalyticsService.cs" />
+    <Compile Include="FileLocalTracker.Universal.cs" />
     <Compile Include="IO\ApplicationDataLocation.cs" />
     <Compile Include="IO\StorageHelper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -122,9 +123,7 @@
       <Name>Windows Mobile Extensions for the UWP</Name>
     </SDKReference>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="ServiceModel\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="..\GoogleAnalyticsClientDotNet.Shared\GoogleAnalyticsClientDotNet.Shared.projitems" Label="Shared" />
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
     <VisualStudioVersion>14.0</VisualStudioVersion>

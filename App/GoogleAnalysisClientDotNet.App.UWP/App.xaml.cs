@@ -108,10 +108,7 @@ namespace GoogleAnalysisClientDotNet.App.UWP
             var deferral = e.SuspendingOperation.GetDeferral();
             //TODO: Save application state and stop any background activity
 
-            if (Service != null)
-            {
-                await Service.SaveTempEventsData();
-            }
+            await Service?.SaveTempEventsData(true);
 
             deferral.Complete();
         }

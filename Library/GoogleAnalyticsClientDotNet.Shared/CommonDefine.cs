@@ -17,7 +17,5 @@ namespace GoogleAnalyticsClientDotNet
         public const int HEART_RATE_INTERVAL = 60000;
 
         public const string GA_FOLDER_NAME = "GoogleAnalyticsClientDotNet";
-
-        public const string GA_TRACK_FILE_NAME = "ga_track_file.mtf";
     }
 }

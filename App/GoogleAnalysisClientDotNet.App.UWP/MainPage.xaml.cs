@@ -1,20 +1,8 @@
-﻿using GoogleAnalyticsClientDotNet;
-using GoogleAnalyticsClientDotNet.ServiceModel;
+﻿using GoogleAnalyticsClientDotNet.ServiceModel;
 using GoogleAnalyticsClientDotNet.Utility;
 using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Runtime.InteropServices.WindowsRuntime;
-using Windows.Foundation;
-using Windows.Foundation.Collections;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Controls.Primitives;
-using Windows.UI.Xaml.Data;
-using Windows.UI.Xaml.Input;
-using Windows.UI.Xaml.Media;
-using Windows.UI.Xaml.Navigation;
 
 // The Blank Page item template is documented at http://go.microsoft.com/fwlink/?LinkId=402352&clcid=0x409
 
@@ -73,10 +61,12 @@ namespace GoogleAnalysisClientDotNet.App.UWP
             StopTimer();
 
             EventParameter eventData = new EventParameter();
-            eventData.Category = "";
-            eventData.Action = "";
-            eventData.Label = "";
-            eventData.ScreenName = "";
+            eventData.Category = "Debug_catory";
+            eventData.Action = "Debug_action";
+            eventData.Label = "Debug_label";
+            eventData.ScreenName = "Debug_screenName";
+            eventData.UserId = GetUserID();
+            eventData.ClientId = Guid.NewGuid().ToString();
 
             App.Service.TrackEvent(eventData);
 

@@ -1,19 +1,7 @@
 ﻿using GoogleAnalyticsClientDotNet.ServiceModel;
 using GoogleAnalyticsClientDotNet.Utility;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 using System.Windows.Threading;
 
 namespace GoogleAnalyticsClientDotNet.App.WPF
@@ -25,8 +13,6 @@ namespace GoogleAnalyticsClientDotNet.App.WPF
     {
         DispatcherTimer timer;
 
-        AnalyticsService service;
-
         DeviceInformationService deviceService;
 
         public MainWindow()
@@ -35,17 +21,10 @@ namespace GoogleAnalyticsClientDotNet.App.WPF
 
             Loaded += MainWindow_Loaded;
             Unloaded += MainWindow_Unloaded;
-            Closed += MainWindow_Closed;
-
-            service = new AnalyticsService();
-            service.Initialize("{tracking id}", "{appName}", "{appId}", "{appVersion}");
-
+            
             deviceService = new DeviceInformationService();
-        }
-
-        private async void MainWindow_Closed(object sender, EventArgs e)
-        {
-            await service?.SaveTempEventsData();
+            App.Service.UserId = GetUserID();
+            App.Service.ClientId = Guid.NewGuid().ToString();
         }
 
         private void MainWindow_Unloaded(object sender, RoutedEventArgs e)
@@ -68,7 +47,7 @@ namespace GoogleAnalyticsClientDotNet.App.WPF
             if (timer == null)
             {
                 timer = new DispatcherTimer();
-                timer.Interval = TimeSpan.FromSeconds(10);
+                timer.Interval = TimeSpan.FromSeconds(3);
                 timer.Tick += Timer_Tick;
             }
             timer.Start();
@@ -78,15 +57,25 @@ namespace GoogleAnalyticsClientDotNet.App.WPF
         {
             StopTimer();
             EventParameter eventData = new EventParameter();
-            eventData.Category = "";
-            eventData.Action = "";
-            eventData.Label = "";
-            eventData.ScreenName = "";
-            eventData.ClientId = "";
+            eventData.Category = "Debug_catory";
+            eventData.Action = "Debug_action";
+            eventData.Label = "Debug_label";
+            eventData.ScreenName = "Debug_screenName";
+            eventData.UserId = GetUserID();
             eventData.UserAgent = deviceService.ModelName;
+            eventData.ClientId = Guid.NewGuid().ToString();
 
-            service.TrackEvent(eventData);
+            App.Service.TrackEvent(eventData);
+
             StartTimer();
+        }
+
+        Random randomInstance = new Random();
+
+        private string GetUserID()
+        {
+            int idx = randomInstance.Next(0, 200);
+            return $"poulin_{idx}@live.com";
         }
     }
 }
