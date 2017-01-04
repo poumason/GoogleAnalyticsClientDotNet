@@ -11,7 +11,9 @@
   <ItemGroup>
     <Compile Include="$(MSBuildThisFileDirectory)BaseAnalyticsService.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)CommonDefine.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)FileLocalTracker.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)IAnalyticsService.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ILocalTracker.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ServiceModel\Attritube\HttpArrayPropertyAttribute.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ServiceModel\Attritube\HttpIgnoreAttribute.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ServiceModel\Attritube\HttpPropertyAttribute.cs" />

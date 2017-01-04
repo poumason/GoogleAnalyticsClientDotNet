@@ -1,9 +1,9 @@
 ﻿using GoogleAnalyticsClientDotNet.ServiceModel;
 using GoogleAnalyticsClientDotNet.Utility;
-using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -13,6 +13,20 @@ namespace GoogleAnalyticsClientDotNet
     {
         private const int MAX_BATCH_LINE = 5;
         private const int MAX_LENGTH = 1024 * 16;
+
+        private HttpService httpService;
+
+        protected INetworkHelper NetworkTool { get; set; }
+
+        protected Queue<string> TempEventCollection { get; private set; }
+
+        protected Timer SenderTimer { get; private set; }
+
+        protected Timer HeartRateTimer { get; private set; }
+
+        protected string DefaultUserAgent { get; set; }
+
+        protected ILocalTracker LocalTracker { get; set; }
 
         public string TrackingID { get; set; }
 
@@ -33,39 +47,19 @@ namespace GoogleAnalyticsClientDotNet
         /// </summary>
         public bool IsBatchSendEvent { get; set; } = false;
 
-        protected INetworkHelper NetworkTool { get; set; }
-
-        protected Queue<string> TempEventCollection { get; private set; }
-
-        protected Timer SenderTimer { get; private set; }
-
-        protected Timer HeartRateTimer { get; private set; }
-
-        private HttpService httpService;
-
-        protected string DefaultUserAgent { get; set; }
-
-        public virtual void Initialize(string trackingId)
-        {
-            httpService = new HttpService();
-            TempEventCollection = new Queue<string>();
-            TrackingID = trackingId;
-
-            Task.Run(async () =>
-            {
-                await ImportEvents();
-            });
-
-            StartSenderTimer();
-            StartHeartRateTimer();
-        }
-
         public void Initialize(string trackingId, string appName, string appId, string appVersion)
         {
             AppId = appId;
             AppName = appName;
             AppVersion = appVersion;
-            Initialize(trackingId);
+            TrackingID = trackingId;
+            InitializeProcess();
+        }
+
+        public void Initialize(string trackingId, string appName, string appId, string appVersion, ILocalTracker localTracker)
+        {
+            LocalTracker = localTracker;
+            Initialize(trackingId, appName, appId, appVersion);
         }
 
         public void TrackScreen(string screenName)
@@ -147,24 +141,14 @@ namespace GoogleAnalyticsClientDotNet
                     return;
                 }
 
-                TempEventCollection collectionItem = null;
-                var tempJson = await ReadFile();
-
-                if (string.IsNullOrEmpty(tempJson) == false)
+                if (LocalTracker == null)
                 {
-                    collectionItem = JsonConvert.DeserializeObject<TempEventCollection>(tempJson);
+                    return;
                 }
 
-                if (collectionItem == null)
-                {
-                    collectionItem = new TempEventCollection();
-                }
+                await LocalTracker.WriteTracksAsync(TempEventCollection);
 
-                collectionItem.Events.AddRange(TempEventCollection);
                 TempEventCollection.Clear();
-
-                string newJson = JsonConvert.SerializeObject(collectionItem);
-                await WriteFile(newJson);
             }
             catch (Exception)
             {
@@ -240,36 +224,46 @@ namespace GoogleAnalyticsClientDotNet
                 Category = "GAClientDotNet",
                 ScreenName = "GAClientDotNet",
                 Action = "PING_PUNG",
-                Label= "SDK",
+                Label = "SDK",
                 UserId = UserId,
-                ClientId = ClientId,            
+                ClientId = ClientId,
             });
         }
 
         #endregion
 
+        protected virtual void InitializeProcess()
+        {
+            httpService = new HttpService();
+            TempEventCollection = new Queue<string>();
+
+            Task.Run(async () =>
+            {
+                await ImportEvents();
+            });
+
+            StartSenderTimer();
+            StartHeartRateTimer();
+        }
+
+        protected abstract void Reset();
+
+        protected abstract string BuildUserAgent();
+
         private async Task ImportEvents()
         {
             try
             {
-                TempEventCollection collectionItem = null;
-                var tempJson = await ReadFile();
+                var previousTracks = await LocalTracker.ReadTrackAsync();
 
-                if (string.IsNullOrEmpty(tempJson) == false)
-                {
-                    collectionItem = JsonConvert.DeserializeObject<TempEventCollection>(tempJson);
-                }
-
-                if (collectionItem == null)
+                if (previousTracks == null || previousTracks.Count() == 0)
                 {
                     return;
                 }
-                else
+
+                foreach (var trackItem in previousTracks)
                 {
-                    foreach (var item in collectionItem.Events)
-                    {
-                        TempEventCollection.Enqueue(item);
-                    }
+                    TempEventCollection.Enqueue(trackItem);
                 }
             }
             catch (Exception)
@@ -279,14 +273,6 @@ namespace GoogleAnalyticsClientDotNet
 #endif
             }
         }
-
-        protected abstract Task<string> ReadFile();
-
-        protected abstract Task WriteFile(string data);
-
-        protected abstract void Reset();
-
-        protected abstract string BuildUserAgent();
 
         private void SendTrack(string postContent)
         {
@@ -358,6 +344,9 @@ namespace GoogleAnalyticsClientDotNet
             StopHeartRateTimer();
             HeartRateTimer?.Dispose();
             HeartRateTimer = null;
+
+            TempEventCollection?.Clear();
+            TempEventCollection = null;
 
             GC.SuppressFinalize(this);
         }

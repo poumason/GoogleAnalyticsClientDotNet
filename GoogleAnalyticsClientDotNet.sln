@@ -21,6 +21,8 @@ Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "GoogleAnalyticsClientDotNet
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GoogleAnalyticsClientDotNet.DotNetStandard", "Library\GoogleAnalyticsClientDotNet.DotNetStandard\GoogleAnalyticsClientDotNet.DotNetStandard.csproj", "{D02BDC37-4D09-404C-B884-2A158EBC2353}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "BackgroundTask", "BackgroundTask", "{95353EC2-94E3-493A-80F8-2F25473EC07F}"
+EndProject
 Global
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
 		Library\GoogleAnalyticsClientDotNet.Shared\GoogleAnalyticsClientDotNet.Shared.projitems*{3bc2114d-a1f5-4aa6-98e8-e39fc5217224}*SharedItemsImports = 4

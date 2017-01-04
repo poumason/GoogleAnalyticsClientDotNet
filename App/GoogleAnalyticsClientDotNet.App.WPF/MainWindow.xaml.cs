@@ -25,8 +25,6 @@ namespace GoogleAnalyticsClientDotNet.App.WPF
     {
         DispatcherTimer timer;
 
-        AnalyticsService service;
-
         DeviceInformationService deviceService;
 
         public MainWindow()
@@ -35,17 +33,10 @@ namespace GoogleAnalyticsClientDotNet.App.WPF
 
             Loaded += MainWindow_Loaded;
             Unloaded += MainWindow_Unloaded;
-            Closed += MainWindow_Closed;
-
-            service = new AnalyticsService();
-            service.Initialize("{tracking id}", "{appName}", "{appId}", "{appVersion}");
-
+            
             deviceService = new DeviceInformationService();
-        }
-
-        private async void MainWindow_Closed(object sender, EventArgs e)
-        {
-            await service?.SaveTempEventsData();
+            App.Service.UserId = GetUserID();
+            App.Service.ClientId = Guid.NewGuid().ToString();
         }
 
         private void MainWindow_Unloaded(object sender, RoutedEventArgs e)
@@ -78,15 +69,23 @@ namespace GoogleAnalyticsClientDotNet.App.WPF
         {
             StopTimer();
             EventParameter eventData = new EventParameter();
-            eventData.Category = "";
-            eventData.Action = "";
-            eventData.Label = "";
-            eventData.ScreenName = "";
+            eventData.Category = "Debug_catory";
+            eventData.Action = "Debug_action";
+            eventData.Label = "Debug_label";
+            eventData.ScreenName = "Debug_screenName";
             eventData.ClientId = "";
             eventData.UserAgent = deviceService.ModelName;
 
-            service.TrackEvent(eventData);
+            App.Service.TrackEvent(eventData);
             StartTimer();
+        }
+
+        Random randomInstance = new Random();
+
+        private string GetUserID()
+        {
+            int idx = randomInstance.Next(0, 200);
+            return $"poulin_{idx}@live.com";
         }
     }
 }

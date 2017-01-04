@@ -6,9 +6,9 @@ namespace GoogleAnalyticsClientDotNet
 {
     public interface IAnalyticsService
     {
-        void Initialize(string trackingId);
-
         void Initialize(string trackingId, string appName, string appId, string appVersion);
+
+        void Initialize(string trackingId, string appName, string appId, string appVersion, ILocalTracker localTracker);
 
         string TrackingID { get; set; }
 
