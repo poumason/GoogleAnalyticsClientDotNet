@@ -44,7 +44,7 @@ namespace GoogleAnalyticsClientDotNet
 
                     if (enabledHeartBeat)
                     {
-                        var task = StartHeartBeat();
+                        StartHeartBeat();
                     }
                 }
             }
@@ -65,7 +65,7 @@ namespace GoogleAnalyticsClientDotNet
 
                     if (enabledSenderLoop)
                     {
-                        var task = StartSenderLoop();
+                        StartSenderLoop();
                     }
                 }
             }
@@ -226,75 +226,81 @@ namespace GoogleAnalyticsClientDotNet
             }
         }
 
-        private async Task StartSenderLoop()
+        private void StartSenderLoop()
         {
-            while (EnabledSenderLoop)
+            var task = Task.Run(async () =>
             {
-                await Task.Delay(CommonDefine.POSITION_TIMER_INTERVAL);
-
-                if (EnabledSenderLoop == false)
+                while (EnabledSenderLoop)
                 {
-                    break;
-                }
+                    await Task.Delay(CommonDefine.POSITION_TIMER_INTERVAL);
 
-                try
-                {
-                    loadLocalTracksLock.WaitOne();
-
-                    List<string> needSendList = new List<string>();
-
-                    var previousList = await ImportEvents();
-
-                    // merge local tracks
-                    if (previousList != null && previousList.Count() > 0)
+                    if (EnabledSenderLoop == false)
                     {
-                        needSendList.AddRange(previousList);
+                        break;
                     }
 
-                    // merge memory tracks
-                    if (TempEventCollection != null && TempEventCollection.Count > 0)
+                    try
                     {
-                        var cacheList = TempEventCollection.ToList();
-                        TempEventCollection.Clear();
+                        loadLocalTracksLock.WaitOne();
 
-                        needSendList.AddRange(cacheList);
+                        List<string> needSendList = new List<string>();
+
+                        var previousList = await ImportEvents();
+
+                        // merge local tracks
+                        if (previousList != null && previousList.Count() > 0)
+                        {
+                            needSendList.AddRange(previousList);
+                        }
+
+                        // merge memory tracks
+                        if (TempEventCollection != null && TempEventCollection.Count > 0)
+                        {
+                            var cacheList = TempEventCollection.ToList();
+                            TempEventCollection.Clear();
+
+                            needSendList.AddRange(cacheList);
+                        }
+
+                        SendBatchTracks(needSendList);
                     }
-
-                    SendBatchTracks(needSendList);
+                    catch (Exception ex)
+                    {
+                        Debug.WriteLine(ex.Message);
+                        Debug.WriteLine(ex.StackTrace);
+                    }
+                    finally
+                    {
+                        loadLocalTracksLock.Set();
+                    }
                 }
-                catch (Exception ex)
-                {
-                    Debug.WriteLine(ex.Message);
-                    Debug.WriteLine(ex.StackTrace);
-                }
-                finally
-                {
-                    loadLocalTracksLock.Set();
-                }
-            }
+            });
         }
 
-        private async Task StartHeartBeat()
+        private void StartHeartBeat()
         {
-            while (EnabledHeartBeat)
+            var task = Task.Run(async () =>
             {
-                await Task.Delay(CommonDefine.HEART_BEAT_INTERVAL);
-
-                if (EnabledHeartBeat == false)
+                while (EnabledHeartBeat)
                 {
-                    break;
+                    await Task.Delay(CommonDefine.HEART_BEAT_INTERVAL);
+
+                    if (EnabledHeartBeat == false)
+                    {
+                        break;
+                    }
+
+                    TrackEvent(new EventParameter
+                    {
+                        Category = "GAClientDotNet",
+                        ScreenName = "GAClientDotNet",
+                        Action = "PING_PONG",
+                        Label = "SDK",
+                        UserId = UserId,
+                        ClientId = ClientId,
+                    });
                 }
-
-                TrackEvent(new EventParameter
-                {
-                    Category = "GAClientDotNet",
-                    ScreenName = "GAClientDotNet",
-                    Action = "PING_PONG",
-                    Label = "SDK",
-                    UserId = UserId,
-                    ClientId = ClientId,
-                });
-            }
+            });
         }
 
         private async Task<IEnumerable<string>> ImportEvents()
