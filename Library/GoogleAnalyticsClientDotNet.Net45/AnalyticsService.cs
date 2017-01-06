@@ -16,8 +16,6 @@ namespace GoogleAnalyticsClientDotNet
             {
                 LocalTracker = new FileLocalTracker();
             }
-
-            base.InitializeProcess();
         }
 
         protected override string BuildUserAgent()

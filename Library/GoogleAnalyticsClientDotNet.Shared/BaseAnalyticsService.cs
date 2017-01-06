@@ -20,7 +20,7 @@ namespace GoogleAnalyticsClientDotNet
 
         protected INetworkHelper NetworkTool { get; set; }
 
-        protected Queue<string> TempEventCollection { get; private set; }
+        protected List<string> TempEventCollection { get; private set; }
 
         protected string DefaultUserAgent { get; set; }
 
@@ -84,14 +84,24 @@ namespace GoogleAnalyticsClientDotNet
         public string UserId { get; set; }
 
         public string ClientId { get; set; }
-        
+
+        public BaseAnalyticsService()
+        {
+            HttpService = new HttpService();
+            TempEventCollection = new List<string>();
+        }
+
         public void Initialize(string trackingId, string appName, string appId, string appVersion)
         {
             AppId = appId;
             AppName = appName;
             AppVersion = appVersion;
             TrackingID = trackingId;
+
             InitializeProcess();
+
+            EnabledHeartBeat = true;
+            EnabledSenderLoop = true;
         }
 
         public void Initialize(string trackingId, string appName, string appId, string appVersion, ILocalTracker localTracker)
@@ -100,14 +110,7 @@ namespace GoogleAnalyticsClientDotNet
             Initialize(trackingId, appName, appId, appVersion);
         }
 
-        protected virtual void InitializeProcess()
-        {
-            HttpService = new HttpService();
-            TempEventCollection = new Queue<string>();
-
-            EnabledHeartBeat = true;
-            EnabledSenderLoop = true;
-        }
+        protected abstract void InitializeProcess();
 
         protected abstract void Reset();
 
@@ -177,7 +180,7 @@ namespace GoogleAnalyticsClientDotNet
             {
                 return;
             }
-            
+
             if (EnabledSenderLoop == false)
             {
                 // add tracks in the LocalTracker
@@ -187,13 +190,13 @@ namespace GoogleAnalyticsClientDotNet
                 }
                 else
                 {
-                    SendTrack(postContent);
+                    SendTrack(new List<string> { postContent });
                 }
             }
             else
             {
-                // add tracks in the Queue
-                TempEventCollection.Enqueue(postContent);
+                // add tracks in the List
+                TempEventCollection.Add(postContent);
             }
         }
 
@@ -238,9 +241,26 @@ namespace GoogleAnalyticsClientDotNet
                 {
                     loadLocalTracksLock.WaitOne();
 
-                    await ImportEvents();
+                    List<string> needSendList = new List<string>();
 
-                    SendBatchTracks();
+                    var previousList = await ImportEvents();
+
+                    // merge local tracks
+                    if (previousList != null && previousList.Count() > 0)
+                    {
+                        needSendList.AddRange(previousList);
+                    }
+
+                    // merge memory tracks
+                    if (TempEventCollection != null && TempEventCollection.Count > 0)
+                    {
+                        var cacheList = TempEventCollection.ToList();
+                        TempEventCollection.Clear();
+
+                        needSendList.AddRange(cacheList);
+                    }
+
+                    SendBatchTracks(needSendList);
                 }
                 catch (Exception ex)
                 {
@@ -277,7 +297,7 @@ namespace GoogleAnalyticsClientDotNet
             }
         }
 
-        private async Task ImportEvents()
+        private async Task<IEnumerable<string>> ImportEvents()
         {
             try
             {
@@ -285,44 +305,51 @@ namespace GoogleAnalyticsClientDotNet
 
                 if (previousTracks == null || previousTracks.Count() == 0)
                 {
-                    return;
-                }
-
-                foreach (var trackItem in previousTracks)
-                {
-                    TempEventCollection.Enqueue(trackItem);
+                    return null;
                 }
 
                 await LocalTracker.WriteTracksAsync(new string[] { "" }, true);
+
+                return previousTracks.ToList();
             }
             catch (Exception)
             {
 #if DEBUG
                 throw;
 #endif
+                return null;
             }
         }
 
-        private void SendTrack(string postContent, string uri = CommonDefine.GOOGLE_ANALYTICS_COLLECT_URL)
+        private void SendTrack(List<string> postContent)
         {
-            if (string.IsNullOrEmpty(postContent))
+            if (postContent == null || postContent.Count == 0)
             {
                 return;
             }
 
             if (NetworkTool.IsNetworkAvailable)
             {
-                var task = HttpService.PostAsync(uri, postContent);
+                string batchTracks = string.Join("\r\n", postContent);
+                var task = HttpService.PostAsync(CommonDefine.GOOGLE_ANALYTICS_BATCH_URL, batchTracks);
                 Debug.WriteLine("GoogleAnalytics: Send");
             }
             else
             {
-                TempEventCollection.Enqueue(postContent);
+                if (LocalTracker != null)
+                {
+                    LocalTracker.WriteTracksAsync(postContent);
+                }
+                else
+                {
+                    TempEventCollection.AddRange(postContent);
+                }
+
                 Debug.WriteLine("GoogleAnalytics: Enqueue");
             }
         }
 
-        private void SendBatchTracks()
+        private void SendBatchTracks(List<string> sendTrackList)
         {
             /*
              * A maximum of 20 hits can be specified per request.
@@ -330,36 +357,25 @@ namespace GoogleAnalyticsClientDotNet
              * No single hit payload can be greater than 8K bytes.
              */
 
-            List<string> batchList = new List<string>();
-            int currentLength = 0;
-            int count = TempEventCollection.Count;
-            int loopTimes = Convert.ToInt32(count / MAX_BATCH_LINE);
-
-            if (loopTimes == 0)
+            if (sendTrackList == null || sendTrackList.Count == 0)
             {
-                loopTimes = 1;
+                return;
             }
 
-            int maxCount = MAX_BATCH_LINE * loopTimes;
+            int currentLength = 0;
+            List<string> batchList = new List<string>();
 
-            for (int i = 0; i < maxCount; i++)
+            foreach (var item in sendTrackList)
             {
-                if (TempEventCollection.Count == 0)
-                {
-                    break;
-                }
-
                 if (batchList.Count < MAX_BATCH_LINE && currentLength < (MAX_LENGTH - 50))
                 {
-                    string item = TempEventCollection.Dequeue();
                     batchList.Add(item);
                     currentLength = item.Length;
                 }
                 else
                 {
                     // must send tracks
-                    string batchTracks = string.Join("\r\n", batchList);
-                    SendTrack(batchTracks, CommonDefine.GOOGLE_ANALYTICS_BATCH_URL);
+                    SendTrack(batchList);
                     batchList.Clear();
                     currentLength = 0;
                 }
@@ -372,8 +388,7 @@ namespace GoogleAnalyticsClientDotNet
             else
             {
                 // send last tracks
-                string batchTracks = string.Join("\r\n", batchList);
-                SendTrack(batchTracks, CommonDefine.GOOGLE_ANALYTICS_BATCH_URL);
+                SendTrack(batchList);
             }
         }
 
@@ -385,7 +400,6 @@ namespace GoogleAnalyticsClientDotNet
             EnabledSenderLoop = false;
 
             TempEventCollection?.Clear();
-            TempEventCollection = null;
 
             loadLocalTracksLock?.Reset();
             loadLocalTracksLock?.Dispose();
