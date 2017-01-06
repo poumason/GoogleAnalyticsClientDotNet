@@ -29,22 +29,22 @@ namespace GoogleAnalyticsClientDotNet
         /// </summary>
         protected ILocalTracker LocalTracker { get; set; }
 
-        private bool enabledHeartRate = false;
-        protected bool EnabledHeartRate
+        private bool enabledHeartBeat = false;
+        public bool EnabledHeartBeat
         {
             get
             {
-                return enabledHeartRate;
+                return enabledHeartBeat;
             }
             set
             {
-                if (value != enabledHeartRate)
+                if (value != enabledHeartBeat)
                 {
-                    enabledHeartRate = value;
+                    enabledHeartBeat = value;
 
-                    if (enabledHeartRate)
+                    if (enabledHeartBeat)
                     {
-                        var task = StartHeartRate();
+                        var task = StartHeartBeat();
                     }
                 }
             }
@@ -84,7 +84,7 @@ namespace GoogleAnalyticsClientDotNet
         public string UserId { get; set; }
 
         public string ClientId { get; set; }
-
+        
         public void Initialize(string trackingId, string appName, string appId, string appVersion)
         {
             AppId = appId;
@@ -105,7 +105,7 @@ namespace GoogleAnalyticsClientDotNet
             HttpService = new HttpService();
             TempEventCollection = new Queue<string>();
 
-            EnabledHeartRate = true;
+            EnabledHeartBeat = true;
             EnabledSenderLoop = true;
         }
 
@@ -254,13 +254,13 @@ namespace GoogleAnalyticsClientDotNet
             }
         }
 
-        private async Task StartHeartRate()
+        private async Task StartHeartBeat()
         {
-            while (EnabledHeartRate)
+            while (EnabledHeartBeat)
             {
-                await Task.Delay(CommonDefine.HEART_RATE_INTERVAL);
+                await Task.Delay(CommonDefine.HEART_BEAT_INTERVAL);
 
-                if (EnabledHeartRate == false)
+                if (EnabledHeartBeat == false)
                 {
                     break;
                 }
@@ -269,7 +269,7 @@ namespace GoogleAnalyticsClientDotNet
                 {
                     Category = "GAClientDotNet",
                     ScreenName = "GAClientDotNet",
-                    Action = "PING_PUNG",
+                    Action = "PING_PONG",
                     Label = "SDK",
                     UserId = UserId,
                     ClientId = ClientId,
@@ -381,7 +381,7 @@ namespace GoogleAnalyticsClientDotNet
         {
             Reset();
 
-            EnabledHeartRate = false;
+            EnabledHeartBeat = false;
             EnabledSenderLoop = false;
 
             TempEventCollection?.Clear();
