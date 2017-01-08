@@ -245,7 +245,7 @@ namespace GoogleAnalyticsClientDotNet
 
                         List<string> needSendList = new List<string>();
 
-                        var previousList = await ImportEvents();
+                        var previousList = await ImportLocalTracks();
 
                         // merge local tracks
                         if (previousList != null && previousList.Count() > 0)
@@ -303,7 +303,7 @@ namespace GoogleAnalyticsClientDotNet
             });
         }
 
-        private async Task<IEnumerable<string>> ImportEvents()
+        private async Task<IEnumerable<string>> ImportLocalTracks()
         {
             try
             {
