@@ -18,18 +18,23 @@ namespace GoogleAnalyticsClientDotNet.ServiceModel
         {
             HttpInstance?.Dispose();
             HttpInstance = null;
-
-            GC.SuppressFinalize(this);
         }
 
         public async Task<bool> PostAsync(string uri, string strContent)
         {
             try
             {
-                HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Post, new Uri(uri));
-                request.Content = new StringContent(strContent, Encoding.UTF8);
-                var result = await HttpInstance.SendAsync(request);
-                return result.IsSuccessStatusCode;
+                if (HttpInstance == null)
+                {
+                    return false;
+                }
+                else
+                {
+                    HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Post, new Uri(uri));
+                    request.Content = new StringContent(strContent, Encoding.UTF8);
+                    var result = await HttpInstance.SendAsync(request);
+                    return result.IsSuccessStatusCode;
+                }
             }
             catch (Exception)
             {
