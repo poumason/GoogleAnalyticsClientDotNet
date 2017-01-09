@@ -190,7 +190,7 @@ namespace GoogleAnalyticsClientDotNet
                 }
                 else
                 {
-                    SendTrack(new List<string> { postContent });
+                    var task = SendTrackAsync(new List<string> { postContent });
                 }
             }
             else
@@ -232,7 +232,7 @@ namespace GoogleAnalyticsClientDotNet
             {
                 while (EnabledSenderLoop)
                 {
-                    await Task.Delay(CommonDefine.POSITION_TIMER_INTERVAL);
+                    await Task.Delay(CommonDefine.SENDER_TIMER_INTERVAL);
 
                     if (EnabledSenderLoop == false)
                     {
@@ -245,7 +245,7 @@ namespace GoogleAnalyticsClientDotNet
 
                         List<string> needSendList = new List<string>();
 
-                        var previousList = await ImportLocalTracks();
+                        var previousList = await GetLocalTracks();
 
                         // merge local tracks
                         if (previousList != null && previousList.Count() > 0)
@@ -303,7 +303,7 @@ namespace GoogleAnalyticsClientDotNet
             });
         }
 
-        private async Task<IEnumerable<string>> ImportLocalTracks()
+        private async Task<IEnumerable<string>> GetLocalTracks()
         {
             try
             {
@@ -327,7 +327,7 @@ namespace GoogleAnalyticsClientDotNet
             }
         }
 
-        private void SendTrack(List<string> postContent)
+        private async Task SendTrackAsync(List<string> postContent)
         {
             if (postContent == null || postContent.Count == 0)
             {
@@ -336,15 +336,34 @@ namespace GoogleAnalyticsClientDotNet
 
             if (NetworkTool.IsNetworkAvailable)
             {
-                string batchTracks = string.Join("\r\n", postContent);
-                var task = HttpService.PostAsync(CommonDefine.GOOGLE_ANALYTICS_BATCH_URL, batchTracks);
+                try
+                {
+                    string batchTracks = string.Join("\r\n", postContent);
+                    await HttpService.PostAsync(CommonDefine.GOOGLE_ANALYTICS_BATCH_URL, batchTracks);
+                }
+                catch (Exception)
+                {
+#if DEBUG
+                    throw;
+#endif
+                }
+
                 Debug.WriteLine("GoogleAnalytics: Send");
             }
             else
             {
                 if (LocalTracker != null)
                 {
-                    LocalTracker.WriteTracksAsync(postContent);
+                    try
+                    {
+                        await LocalTracker.WriteTracksAsync(postContent);
+                    }
+                    catch (Exception)
+                    {
+#if DEBUG
+                        throw;
+#endif
+                    }
                 }
                 else
                 {
@@ -381,7 +400,8 @@ namespace GoogleAnalyticsClientDotNet
                 else
                 {
                     // must send tracks
-                    SendTrack(batchList);
+                    var cloneBatchList = new List<string>(batchList);
+                    var task = SendTrackAsync(cloneBatchList);
                     batchList.Clear();
                     currentLength = 0;
                 }
@@ -394,7 +414,7 @@ namespace GoogleAnalyticsClientDotNet
             else
             {
                 // send last tracks
-                SendTrack(batchList);
+                var task = SendTrackAsync(batchList);
             }
         }
 
@@ -408,12 +428,7 @@ namespace GoogleAnalyticsClientDotNet
             TempEventCollection?.Clear();
 
             loadLocalTracksLock?.Reset();
-            loadLocalTracksLock?.Dispose();
-            loadLocalTracksLock = null;
-
-            LocalTracker = null;
-
-            GC.SuppressFinalize(this);
+            loadLocalTracksLock?.Dispose();            
         }
     }
 }

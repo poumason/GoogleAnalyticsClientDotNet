@@ -18,8 +18,6 @@ namespace GoogleAnalyticsClientDotNet.ServiceModel
         {
             HttpInstance?.Dispose();
             HttpInstance = null;
-
-            GC.SuppressFinalize(this);
         }
 
         public async Task<bool> PostAsync(string uri, string strContent)

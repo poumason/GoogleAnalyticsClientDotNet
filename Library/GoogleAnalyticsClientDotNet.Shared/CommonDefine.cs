@@ -12,7 +12,7 @@ namespace GoogleAnalyticsClientDotNet
 
         public const string GOOGLE_ANALYTICS_BATCH_URL = "https://www.google-analytics.com/batch";
 
-        public const int POSITION_TIMER_INTERVAL = 5000;
+        public const int SENDER_TIMER_INTERVAL = 5000;
 
         public const int HEART_BEAT_INTERVAL = 60000;
 

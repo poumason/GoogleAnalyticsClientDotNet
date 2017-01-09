@@ -26,7 +26,6 @@ namespace GoogleAnalyticsClientDotNet.Utility
 
         public void Dispose()
         {
-            GC.SuppressFinalize(this);
         }
     }
 }
