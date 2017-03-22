@@ -3,7 +3,7 @@
 namespace GoogleAnalyticsClientDotNet.ServiceModel
 {
     [AttributeUsage(AttributeTargets.Property, Inherited = true)]
-    public class HttpPropertyAttribute : Attribute
+    internal class HttpPropertyAttribute : Attribute
     {
         public string Name { get; private set; }
 

@@ -5,7 +5,7 @@ using System.Text;
 namespace GoogleAnalyticsClientDotNet.ServiceModel
 {
     [AttributeUsage(AttributeTargets.Property, Inherited = true)]
-    public class HttpArrayPropertyAttribute : Attribute
+    internal class HttpArrayPropertyAttribute : Attribute
     {
         public HttpPropertyFor For { get; private set; }
 

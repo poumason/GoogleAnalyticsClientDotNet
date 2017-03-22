@@ -3,7 +3,7 @@
 namespace GoogleAnalyticsClientDotNet.ServiceModel
 {
     [AttributeUsage(AttributeTargets.Property, Inherited = true)]
-    public class HttpIgnoreAttribute : Attribute
+    internal class HttpIgnoreAttribute : Attribute
     {
     }
 }

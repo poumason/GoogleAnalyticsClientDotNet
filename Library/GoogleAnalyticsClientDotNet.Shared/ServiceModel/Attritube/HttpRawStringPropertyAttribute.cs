@@ -3,7 +3,7 @@
 namespace GoogleAnalyticsClientDotNet.ServiceModel
 {
     [AttributeUsage(AttributeTargets.Property, Inherited = true)]
-    public class HttpRawStringPropertyAttribute : Attribute
+    internal class HttpRawStringPropertyAttribute : Attribute
     {
     }
 }
