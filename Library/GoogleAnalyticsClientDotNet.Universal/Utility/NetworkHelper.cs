@@ -27,7 +27,7 @@ namespace GoogleAnalyticsClientDotNet.Utility
                 }
 
                 isNetworkAvailable = value;
-                NetworkAvailabilityChange.Invoke(null, isNetworkAvailable);
+                NetworkAvailabilityChange?.Invoke(null, isNetworkAvailable);
             }
         }
 
