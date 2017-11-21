@@ -1,5 +1,4 @@
 ﻿using GoogleAnalyticsClientDotNet.ServiceModel;
-using GoogleAnalyticsClientDotNet.Utility;
 using System;
 using System.Windows;
 using System.Windows.Threading;
@@ -13,8 +12,6 @@ namespace GoogleAnalyticsClientDotNet.App.WPF
     {
         DispatcherTimer timer;
 
-        DeviceInformationService deviceService;
-
         public MainWindow()
         {
             InitializeComponent();
@@ -22,7 +19,6 @@ namespace GoogleAnalyticsClientDotNet.App.WPF
             Loaded += MainWindow_Loaded;
             Unloaded += MainWindow_Unloaded;
             
-            deviceService = new DeviceInformationService();
             App.Service.UserId = GetUserID();
             App.Service.ClientId = Guid.NewGuid().ToString();
         }
@@ -62,7 +58,6 @@ namespace GoogleAnalyticsClientDotNet.App.WPF
             eventData.Label = "Debug_label";
             eventData.ScreenName = "Debug_screenName";
             eventData.UserId = GetUserID();
-            eventData.UserAgent = deviceService.ModelName;
             eventData.ClientId = Guid.NewGuid().ToString();
 
             App.Service.TrackEvent(eventData);
