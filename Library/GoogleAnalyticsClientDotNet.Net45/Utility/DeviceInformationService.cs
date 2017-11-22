@@ -1,7 +1,10 @@
 ﻿using Microsoft.Win32;
 using System;
+using System.Diagnostics;
 using System.Linq;
 using System.Management;
+using System.Threading;
+using System.Threading.Tasks;
 using System.Windows.Input;
 
 namespace GoogleAnalyticsClientDotNet.Utility
@@ -130,22 +133,44 @@ namespace GoogleAnalyticsClientDotNet.Utility
         }
         #endregion
 
+        public bool IsInitialized { get; private set; } = false;
+
         public DeviceInformationService()
         {
-            SelectQuery query = new SelectQuery(@"Select * from Win32_ComputerSystem");
+            Initialize();
+        }
 
-            //initialize the searcher with the query it is supposed to execute
-            using (ManagementObjectSearcher searcher = new ManagementObjectSearcher(query))
+        private void Initialize()
+        {
+            Task.Run(() =>
             {
-                //execute the query
-                foreach (System.Management.ManagementObject process in searcher.Get())
+                try
                 {
-                    //print system info
-                    process.Get();
-                    SystemManufacturer = $"{process["Manufacturer"]}";
-                    ModelName = $"{process["Model"]}";
+                    SelectQuery query = new SelectQuery(@"Select * from Win32_BaseBoard");
+
+                    //initialize the searcher with the query it is supposed to execute
+                    using (ManagementObjectSearcher searcher = new ManagementObjectSearcher(query))
+                    {
+                        searcher.Options.Timeout = TimeSpan.FromSeconds(5);
+
+                        //execute the query
+                        foreach (System.Management.ManagementObject process in searcher.Get())
+                        {
+                            //print system info
+                            process.Get();
+                            SystemManufacturer = $"{process["Manufacturer"]}";
+                            ModelName = $"{process["Product"]}";
+                        }
+                    }
+
+                    IsInitialized = true;
                 }
-            }
+                catch (Exception ex)
+                {
+                    Debug.WriteLine(ex);
+                    IsInitialized = false;
+                }
+            });
         }
     }
 }
