@@ -142,24 +142,24 @@ namespace GoogleAnalyticsClientDotNet.Utility
 
         private void Initialize()
         {
-            CancellationTokenSource cancel = new CancellationTokenSource(5000);
-
             Task.Run(() =>
             {
                 try
                 {
-                    SelectQuery query = new SelectQuery(@"Select * from Win32_ComputerSystem");
+                    SelectQuery query = new SelectQuery(@"Select * from Win32_BaseBoard");
 
                     //initialize the searcher with the query it is supposed to execute
                     using (ManagementObjectSearcher searcher = new ManagementObjectSearcher(query))
                     {
+                        searcher.Options.Timeout = TimeSpan.FromSeconds(5);
+
                         //execute the query
                         foreach (System.Management.ManagementObject process in searcher.Get())
                         {
                             //print system info
                             process.Get();
                             SystemManufacturer = $"{process["Manufacturer"]}";
-                            ModelName = $"{process["Model"]}";
+                            ModelName = $"{process["Product"]}";
                         }
                     }
 
@@ -170,7 +170,7 @@ namespace GoogleAnalyticsClientDotNet.Utility
                     Debug.WriteLine(ex);
                     IsInitialized = false;
                 }
-            }, cancel.Token);
+            });
         }
     }
 }
