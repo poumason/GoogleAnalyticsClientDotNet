@@ -1,5 +1,9 @@
-﻿using System;
+﻿
+#if !WINDOWS_UWP
+using System;
+using System.Collections.Generic;
 using System.Runtime.InteropServices;
+using System.Text;
 
 namespace GoogleAnalyticsClientDotNet.Utility
 {
@@ -29,3 +33,4 @@ namespace GoogleAnalyticsClientDotNet.Utility
         }
     }
 }
+#endif

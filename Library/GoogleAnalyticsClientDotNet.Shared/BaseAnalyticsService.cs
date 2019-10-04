@@ -22,7 +22,7 @@ namespace GoogleAnalyticsClientDotNet
 
         protected List<string> TempEventCollection { get; private set; }
 
-        protected string DefaultUserAgent { get; set; }
+        public string DefaultUserAgent { get; set; }
 
         /// <summary>
         /// Support save cached tracks source to the custom storage.
@@ -114,7 +114,7 @@ namespace GoogleAnalyticsClientDotNet
 
         protected abstract void Reset();
 
-        protected abstract string BuildUserAgent();
+        protected abstract void BuildUserAgent();
 
         public void TrackScreen(string screenName)
         {
@@ -305,9 +305,14 @@ namespace GoogleAnalyticsClientDotNet
 
         private async Task<IEnumerable<string>> GetLocalTracks()
         {
+            if (LocalTracker == null)
+            {
+                return null;
+            }
+
             try
             {
-                var previousTracks = await LocalTracker.ReadTrackAsync();
+                var previousTracks = await LocalTracker?.ReadTrackAsync();
 
                 if (previousTracks == null || previousTracks.Count() == 0)
                 {
@@ -428,7 +433,7 @@ namespace GoogleAnalyticsClientDotNet
             TempEventCollection?.Clear();
 
             loadLocalTracksLock?.Reset();
-            loadLocalTracksLock?.Dispose();            
+            loadLocalTracksLock?.Dispose();
         }
     }
 }

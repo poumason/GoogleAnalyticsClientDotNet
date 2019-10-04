@@ -49,12 +49,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AnalyticsService.cs" />
-    <Compile Include="FileLocalTracker.Net45.cs">
-      <ExcludeFromStyleCop>True</ExcludeFromStyleCop>
-    </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Utility\DeviceInformationService.cs" />
-    <Compile Include="Utility\NetworkHelper.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

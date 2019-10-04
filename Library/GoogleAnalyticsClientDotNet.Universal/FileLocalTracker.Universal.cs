@@ -16,49 +16,6 @@ namespace GoogleAnalyticsClientDotNet
 
         public async Task WriteTracksAsync(IEnumerable<string> tracks, bool replace = false)
         {
-            await WriteLocalFileAsync(tracks, replace);
-        }
-
-        public async Task<IEnumerable<string>> ReadTrackAsync()
-        {
-            return await ReadLocalFileAsync();
-        }
-
-        private async Task<IEnumerable<string>> ReadLocalFileAsync()
-        {
-            IEnumerable<string> content = null;
-
-            try
-            {
-                var file = await GetGoogleAnalyticsTempFile();
-
-                if (file != null)
-                {
-                    StorageFile target = file as StorageFile;
-                    var rawStr = await FileIO.ReadTextAsync(target);
-
-                    string[] listData = rawStr.Split(new string[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries);
-
-                    if (listData != null || listData.Count() > 0)
-                    {
-                        content = listData.ToList();
-                    }
-                }
-            }
-            catch (UnauthorizedAccessException ex)
-            {
-                Debug.WriteLine(ex);
-            }
-            catch (Exception ex)
-            {
-                Debug.WriteLine(ex);
-            }
-
-            return content;
-        }
-
-        private async Task WriteLocalFileAsync(IEnumerable<string> tracks, bool replace)
-        {
             if (tracks == null || tracks.Count() == 0)
             {
                 return;
@@ -99,7 +56,41 @@ namespace GoogleAnalyticsClientDotNet
             {
                 Debug.WriteLine(ex);
             }
-        } 
+        }
+
+        public async Task<IEnumerable<string>> ReadTrackAsync()
+        {
+
+            IEnumerable<string> content = null;
+
+            try
+            {
+                var file = await GetGoogleAnalyticsTempFile();
+
+                if (file != null)
+                {
+                    StorageFile target = file as StorageFile;
+                    var rawStr = await FileIO.ReadTextAsync(target);
+
+                    string[] listData = rawStr.Split(new string[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries);
+
+                    if (listData != null || listData.Count() > 0)
+                    {
+                        content = listData.ToList();
+                    }
+                }
+            }
+            catch (UnauthorizedAccessException ex)
+            {
+                Debug.WriteLine(ex);
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine(ex);
+            }
+
+            return content;
+        }
 
         private async Task<object> GetGoogleAnalyticsTempFile()
         {

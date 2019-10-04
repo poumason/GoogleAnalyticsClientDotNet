@@ -1,9 +1,17 @@
 ﻿using GoogleAnalyticsClientDotNet.Utility;
+using System;
 
 namespace GoogleAnalyticsClientDotNet
 {
     public class AnalyticsService : BaseAnalyticsService
     {
+        protected override void BuildUserAgent()
+        {
+            if (string.IsNullOrEmpty(DefaultUserAgent))
+            {
+                throw new ArgumentNullException("Must setting DefaultUserAgent property.");
+            }
+        }
 
         protected override void InitializeProcess()
         {
@@ -13,18 +21,12 @@ namespace GoogleAnalyticsClientDotNet
             {
                 LocalTracker = new FileLocalTracker();
             }
-
-            BuildUserAgent();
-        }
-
-        protected override void BuildUserAgent()
-        {
-            DeviceInformationService deviceService = new DeviceInformationService();
-            DefaultUserAgent = $"Mozilla/5.0 (compatible; MSIE {deviceService?.IEVersion}.0; Windows NT {deviceService?.OperationSystemVersion}; Trident/{deviceService?.TridentVersion}.0)";
         }
 
         protected override void Reset()
         {
+            this.NetworkTool = null;
+            this.LocalTracker = null;
         }
     }
 }

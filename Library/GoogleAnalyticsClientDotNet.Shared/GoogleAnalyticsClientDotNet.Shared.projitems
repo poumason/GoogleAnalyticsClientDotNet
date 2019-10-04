@@ -28,7 +28,9 @@
     <Compile Include="$(MSBuildThisFileDirectory)ServiceModel\ServiceParameterConverter\IServiceParameterConveter.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ServiceModel\Service\HttpService.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Utility\DictionaryExtension.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)FileLocalTracker.Net.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Utility\IDeviceInformationService.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Utility\INetworkHelper.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Utility\NetworkHelper.Net.cs" />
   </ItemGroup>
 </Project>

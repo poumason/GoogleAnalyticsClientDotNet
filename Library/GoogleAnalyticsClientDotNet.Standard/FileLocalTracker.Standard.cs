@@ -1,12 +1,12 @@
 ﻿//using System;
 //using System.Collections.Generic;
-//using System.Diagnostics;
-//using System.IO;
-//using System.Linq;
 //using System.Text;
 //using System.Threading.Tasks;
+//using System.IO;
+//using System.Diagnostics;
+//using System.Linq;
 
-//namespace GoogleAnalyticsClientDotNet
+//namespace GoogleAnalyticsClientDotNet.Utiilty
 //{
 //    public class FileLocalTracker : ILocalTracker
 //    {
@@ -19,12 +19,10 @@
 
 //            try
 //            {
-//                using (FileStream stream = File.Open(SourceName, FileMode.OpenOrCreate, FileAccess.ReadWrite))
+//                using (FileStream stream = new FileStream(SourceName, FileMode.OpenOrCreate))
 //                {
-//                    using (StreamReader reader = new StreamReader(stream, Encoding.UTF8))
-//                    {
-//                        rawStr =await reader.ReadToEndAsync();
-//                    }
+//                    StreamReader reader = new StreamReader(stream, Encoding.UTF8);
+//                    rawStr = await reader.ReadToEndAsync();
 //                }
 
 //                string[] listData = rawStr.Split(new string[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries);
@@ -49,8 +47,9 @@
 //                Debug.WriteLine(ex);
 //            }
 
-//            return await Task.FromResult(content);
+//            return content;
 //        }
+
 
 //        public async Task WriteTracksAsync(IEnumerable<string> tracks, bool replace = false)
 //        {
@@ -75,7 +74,11 @@
 
 //                string data = string.Join(Environment.NewLine, cachedData);
 
-//                File.WriteAllText(SourceName, data, Encoding.UTF8);
+//                using (FileStream stream = new FileStream(SourceName, FileMode.OpenOrCreate))
+//                {
+//                    StreamWriter writer = new StreamWriter(stream, Encoding.UTF8);
+//                    await writer.WriteAsync(data);
+//                }
 //            }
 //            catch (IOException)
 //            {
@@ -91,8 +94,6 @@
 //            {
 //                Debug.WriteLine(ex);
 //            }
-
-//            await Task.FromResult(true);
 //        }
 //    }
 //}
