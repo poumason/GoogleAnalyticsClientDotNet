@@ -19,8 +19,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Test", "Test", "{52D1D9E1-2
 EndProject
 Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "GoogleAnalyticsClientDotNet.Shared", "Library\GoogleAnalyticsClientDotNet.Shared\GoogleAnalyticsClientDotNet.Shared.shproj", "{C47FD564-E9D8-4042-BA81-8EBF448D3BBE}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "BackgroundTask", "BackgroundTask", "{95353EC2-94E3-493A-80F8-2F25473EC07F}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GoogleAnalyticsClientDotNet.Standard", "Library\GoogleAnalyticsClientDotNet.Standard\GoogleAnalyticsClientDotNet.Standard.csproj", "{D352D8DE-7202-4B9D-8D9F-B4533B66F91A}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GoogleAnalyticsClientDotNet.App.Core", "App\GoogleAnalyticsClientDotNet.App.Core\GoogleAnalyticsClientDotNet.App.Core.csproj", "{033C2050-E6C2-4285-9E65-C800C18B25C4}"
