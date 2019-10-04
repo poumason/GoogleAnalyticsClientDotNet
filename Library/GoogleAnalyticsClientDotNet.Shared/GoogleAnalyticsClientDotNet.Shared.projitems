@@ -11,9 +11,8 @@
   <ItemGroup>
     <Compile Include="$(MSBuildThisFileDirectory)BaseAnalyticsService.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)CommonDefine.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)FileLocalTracker.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)IAnalyticsService.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)ILocalTracker.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Interface\IAnalyticsService.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Interface\ILocalTracker.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ServiceModel\Attritube\HttpArrayPropertyAttribute.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ServiceModel\Attritube\HttpIgnoreAttribute.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ServiceModel\Attritube\HttpPropertyAttribute.cs" />
@@ -29,7 +28,10 @@
     <Compile Include="$(MSBuildThisFileDirectory)ServiceModel\ServiceParameterConverter\IServiceParameterConveter.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ServiceModel\Service\HttpService.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Utility\DictionaryExtension.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Utility\IDeviceInformationService.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Utility\INetworkHelper.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Interface\IDeviceInformationService.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Interface\INetworkHelper.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="$(MSBuildThisFileDirectory)Interface\" />
   </ItemGroup>
 </Project>

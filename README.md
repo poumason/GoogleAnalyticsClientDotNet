@@ -12,14 +12,18 @@ Supported Platform : UWP, .NET(4.5.1)
 ### Usage:
 
 Step 1. install nuget:
-* UWP: https://www.nuget.org/packages/GoogleAnalyticsClientDotNet.Universal/
-* WPF: https://www.nuget.org/packages/GoogleAnalyticsClientDotNet.Net45/
+* [UWP](https://www.nuget.org/packages/GoogleAnalyticsClientDotNet.Universal/)
+* [WPF](https://www.nuget.org/packages/GoogleAnalyticsClientDotNet.Net45/)
+* [.Net Standard](https://www.nuget.org/packages/GoogleAnalyticsClientDotNet.Standard/)
 
 Step 2. new the AnalyticsService instance.
 
 ```csharp
 AnalyticsService service = new AnalyticsService();
 service.Initialize("{tracking id}", "{appName}", "{appId}", "{appVersion}");
+
+// If you install .NET Standard version, must setting DefaultUserAgent property
+service.DefaultUserAgent = "{default user agent}";
 ```
 
 Step 3. new the EventParameter, and set properties.
@@ -36,7 +40,7 @@ eventData.UserAgent = deviceService.ModelName;
 service.TrackEvent(eventData);
 ```
 
-Step 4. For WPF, need call method: SaveTempEventsData() to keep not upload events.
+Step 4. For WPF or .NET Standard, need call method: SaveTempEventsData() to keep not upload events.
 ```csharp
 private async void MainWindow_Closed(object sender, EventArgs e)
 {

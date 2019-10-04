@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace GoogleAnalyticsClientDotNet
@@ -7,8 +6,6 @@ namespace GoogleAnalyticsClientDotNet
     public interface ILocalTracker
     {
         string SourceName { get; set; }
-
-        string Name { get; set; }
 
         Task WriteTracksAsync(IEnumerable<string> tracks, bool replace = false);
 

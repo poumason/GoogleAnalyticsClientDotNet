@@ -1,28 +1,29 @@
-﻿using System;
+﻿#if !WINDOWS_UWP
+using System;
 using System.Collections.Generic;
-using System.Diagnostics;
-using System.IO;
-using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.IO;
+using System.Diagnostics;
+using System.Linq;
 
 namespace GoogleAnalyticsClientDotNet
 {
-    public partial class FileLocalTracker : ILocalTracker
+    public class FileLocalTracker : ILocalTracker
     {
-        private Task<IEnumerable<string>> ReadLocalFileAsync()
+        public string SourceName { get; set; } = "default_ga_track_file.mtf";
+
+        public async Task<IEnumerable<string>> ReadTrackAsync()
         {
             IEnumerable<string> content = null;
             string rawStr = string.Empty;
 
             try
             {
-                using (FileStream stream = File.Open(SourceName, FileMode.OpenOrCreate, FileAccess.ReadWrite))
+                using (FileStream stream = new FileStream(SourceName, FileMode.OpenOrCreate))
                 {
-                    using (StreamReader reader = new StreamReader(stream, Encoding.UTF8))
-                    {
-                        rawStr = reader.ReadToEnd();
-                    }
+                    StreamReader reader = new StreamReader(stream, Encoding.UTF8);
+                    rawStr = await reader.ReadToEndAsync();
                 }
 
                 string[] listData = rawStr.Split(new string[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries);
@@ -47,10 +48,11 @@ namespace GoogleAnalyticsClientDotNet
                 Debug.WriteLine(ex);
             }
 
-            return Task.FromResult(content);
+            return content;
         }
 
-        private async Task WriteLocalFileAsync(IEnumerable<string> tracks, bool replace)
+
+        public async Task WriteTracksAsync(IEnumerable<string> tracks, bool replace = false)
         {
             if (tracks == null || tracks.Count() == 0)
             {
@@ -73,7 +75,11 @@ namespace GoogleAnalyticsClientDotNet
 
                 string data = string.Join(Environment.NewLine, cachedData);
 
-                File.WriteAllText(SourceName, data, Encoding.UTF8);
+                using (FileStream stream = new FileStream(SourceName, FileMode.OpenOrCreate))
+                {
+                    StreamWriter writer = new StreamWriter(stream, Encoding.UTF8);
+                    await writer.WriteAsync(data);
+                }
             }
             catch (IOException)
             {
@@ -89,8 +95,7 @@ namespace GoogleAnalyticsClientDotNet
             {
                 Debug.WriteLine(ex);
             }
-
-            await Task.FromResult(true);
         }
     }
 }
+#endif
