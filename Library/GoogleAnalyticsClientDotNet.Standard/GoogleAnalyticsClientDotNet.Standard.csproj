@@ -10,6 +10,7 @@
     <AssemblyVersion>1.0.0.5</AssemblyVersion>
     <PackageReleaseNotes>1.0.0.5: support .NET Standard 2.0.</PackageReleaseNotes>
     <RepositoryUrl>https://github.com/poumason/GoogleAnalyticsClientDotNet</RepositoryUrl>
+    <FileVersion>1.0.0.5</FileVersion>
   </PropertyGroup>
 
   <Import Project="..\GoogleAnalyticsClientDotNet.Shared\GoogleAnalyticsClientDotNet.Shared.projitems" Label="Shared" />
