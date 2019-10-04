@@ -8,9 +8,21 @@ using Windows.Storage;
 
 namespace GoogleAnalyticsClientDotNet
 {
-    public partial class FileLocalTracker : ILocalTracker
+    public class FileLocalTracker : ILocalTracker
     {
         private StorageFile TempFile { get; set; }
+
+        public string SourceName { get; set; } = "default_ga_track_file.mtf";
+
+        public async Task WriteTracksAsync(IEnumerable<string> tracks, bool replace = false)
+        {
+            await WriteLocalFileAsync(tracks, replace);
+        }
+
+        public async Task<IEnumerable<string>> ReadTrackAsync()
+        {
+            return await ReadLocalFileAsync();
+        }
 
         private async Task<IEnumerable<string>> ReadLocalFileAsync()
         {

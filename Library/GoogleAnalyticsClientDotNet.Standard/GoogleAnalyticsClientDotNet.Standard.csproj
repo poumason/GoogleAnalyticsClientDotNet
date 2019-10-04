@@ -1,0 +1,21 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <Description>The project provides basic Event track for using Google Analytics.</Description>
+    <Authors>Pou Lin</Authors>
+    <Company />
+    <Copyright>Copyright © Pou Lin 2019</Copyright>
+    <PackageProjectUrl>https://github.com/poumason/GoogleAnalyticsClientDotNet</PackageProjectUrl>
+    <AssemblyVersion>1.0.0.5</AssemblyVersion>
+    <PackageReleaseNotes>1.0.0.5: support .NET Standard 2.0.</PackageReleaseNotes>
+    <RepositoryUrl>https://github.com/poumason/GoogleAnalyticsClientDotNet</RepositoryUrl>
+  </PropertyGroup>
+
+  <Import Project="..\GoogleAnalyticsClientDotNet.Shared\GoogleAnalyticsClientDotNet.Shared.projitems" Label="Shared" />
+
+  <ItemGroup>
+    <PackageReference Include="Newtonsoft.Json" Version="12.0.2" />
+  </ItemGroup>
+
+</Project>
